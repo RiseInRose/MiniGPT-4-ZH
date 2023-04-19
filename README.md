@@ -44,7 +44,7 @@ conda activate minigpt4
 
 Vicuna是一种基于LLAMA的LLM，性能接近于ChatGPT，并且是开源的。我们当前使用的是Vicuna-13B v0版本。
 
-为了准备Vicuna的权重，首先从 https://huggingface.co/lmsys/vicuna-13b-delta-v0  下载Vicuna的增量权重。如果你已经安装了git-lfs（https://git-lfs.com），可以通过以下方式完成：
+为了准备Vicuna的权重，首先从 https://huggingface.co/lmsys/vicuna-13b-delta-v0  下载Vicuna的增量权重。如果你已经安装了git-lfs（https://git-lfs.com） ，可以通过以下方式完成：
 
 ```bash
 git lfs install
@@ -58,7 +58,7 @@ git clone https://huggingface.co/lmsys/vicuna-13b-delta-v0
 提示：
 
 可以通过填写表格来获取LLaMA模型的权重。当然，热心的“网友”已经帮忙泄漏出来了。
-下载地址：https://github.com/facebookresearch/llama/issues/149 里面有很多选择，不安装的话，可以点击链接，使用迅雷下载。
+下载地址：https://github.com/facebookresearch/llama/issues/149 里面有很多选择，不安装ipfs的话，可以点击链接，使用迅雷下载。
 
 ```
 You can download normally, or use these commands from the Kubo CLI:
