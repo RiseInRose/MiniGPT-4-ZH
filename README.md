@@ -168,3 +168,8 @@ torchrun --nproc-per-node NUM_GPU train.py --cfg-path train_configs/minigpt4_sta
 ## 许可证.  
 此存储库采用[BSD 3-Clause许可证](LICENSE.md)。   
 许多代码基于[Lavis](https://github.com/salesforce/LAVIS)，这里是BSD 3-Clause许可证[here](LICENSE_Lavis.md)。   
+
+## 感谢
+本项目fork 自 https://github.com/Vision-CAIR/MiniGPT-4   
+翻译大部分来自 https://github.com/Vision-CAIR/MiniGPT-4
+
