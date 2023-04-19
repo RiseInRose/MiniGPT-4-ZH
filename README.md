@@ -44,7 +44,7 @@ conda activate minigpt4
 
 Vicuna是一种基于LLAMA的LLM，性能接近于ChatGPT，并且是开源的。我们当前使用的是Vicuna-13B v0版本。
 
-为了准备Vicuna的权重，首先从https://huggingface.co/lmsys/vicuna-13b-delta-v0下载Vicuna的增量权重。如果你已经安装了git-lfs（https://git-lfs.com），可以通过以下方式完成：
+为了准备Vicuna的权重，首先从 https://huggingface.co/lmsys/vicuna-13b-delta-v0  下载Vicuna的增量权重。如果你已经安装了git-lfs（https://git-lfs.com），可以通过以下方式完成：
 
 ```bash
 git lfs install
@@ -52,14 +52,32 @@ git clone https://huggingface.co/lmsys/vicuna-13b-delta-v0
 ```
 请注意，这并不是直接可用的工作权重，而是工作权重与LLAMA-13B原始权重之间的差异（由于LLAMA的规则，我们无法分发LLAMA的权重）。
 
-然后，您需要获取原始的LLAMA-13B权重，可以按照HuggingFace提供的说明[here](https://huggingface.co/transformers/model_doc/gpt2.html#transformers-gpt2-preprocessing-script)或者从互联网上下载。
+然后，您需要获取原始的LLAMA-13B权重，可以按照HuggingFace提供的说明[here](https://huggingface.co/docs/transformers/main/model_doc/llama) 或者从互联网上下载。
 
 ### 原始权重获取如下：
 提示：
 
-可以通过填写表格来获取LLaMA模型的权重。
+可以通过填写表格来获取LLaMA模型的权重。当然，热心的“网友”已经帮忙泄漏出来了。
+下载地址：https://github.com/facebookresearch/llama/issues/149 里面有很多选择，不安装的话，可以点击链接，使用迅雷下载。
+
+```
+You can download normally, or use these commands from the Kubo CLI:
+
+# Optional: Preload the 7B model. Retrieves the content you don't have yet. Replace with another CID, as needed.
+ipfs refs -r QmbvdJ7KgvZiyaqHw5QtQxRtUd7pCAdkWWbzuvyKusLGTw
+
+# Optional: Pin the 7B model. The GC removes old content you don't use, this prevents the model from being GC'd if enabled.
+ipfs pin add QmbvdJ7KgvZiyaqHw5QtQxRtUd7pCAdkWWbzuvyKusLGTw
+
+# Download from IPFS and save to disk via CLI:
+ipfs get QmbvdJ7KgvZiyaqHw5QtQxRtUd7pCAdkWWbzuvyKusLGTw --output ./7B
+
+
+```
+
 
 下载完权重之后，需要使用转换脚本将它们转换为Hugging Face Transformers格式。可以使用以下命令（示例）调用脚本：
+脚本地址：https://github.com/huggingface/transformers/blob/main/src/transformers/models/llama/convert_llama_weights_to_hf.py
 
 ```bash
 python src/transformers/models/llama/convert_llama_weights_to_hf.py \
