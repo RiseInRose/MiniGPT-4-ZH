@@ -179,9 +179,9 @@ torchrun --nproc-per-node NUM_GPU train.py --cfg-path train_configs/minigpt4_sta
 ## 国内交流群
 群主会不定期发布 各类亮眼项目体验版本 供大家体验，星球主要沉淀一些AI知识，帮助节约时间。欢迎各位读者老爷，漂亮姐姐给我的项目点赞！
 
-|              直接加群               |                 如果前面的过期，加我拉你入群                  |                      知识星球                       |
-|:-------------------------------:|:-----------------------------------------------:|:-----------------------------------------------:|
-| <img src="./img/WechatIMG88.jpeg" width="300"/> | <img src="./img/WechatIMG87.jpeg" width="300"/> | <img src="./img/WechatIMG81.jpeg" width="300"/> |
+|              关注公众号进群               |                      知识星球                       |
+|:-------------------------------:|:-----------------------------------------------:|
+| <img src="./img/qrcode.png" width="300"/> | <img src="./img/WechatIMG81.jpeg" width="300"/> |
 
 ## 许可证.  
 此存储库采用[BSD 3-Clause许可证](LICENSE.md)。   
