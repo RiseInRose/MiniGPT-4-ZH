@@ -12,13 +12,16 @@ MiniGPT-4: 使用先进的大型语言模型增强视觉语言理解
 
 <a href='https://minigpt-4.github.io'><img src='https://img.shields.io/badge/Project-Page-Green'></a>  <a href='MiniGPT_4.pdf'><img src='https://img.shields.io/badge/Paper-PDF-red'></a> <a href='https://huggingface.co/spaces/Vision-CAIR/minigpt4'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue'></a> <a href='https://huggingface.co/Vision-CAIR/MiniGPT-4'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Model-blue'></a> [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1OK4kYsZphwt5DXchKkzMBjYF6jnkqh4R?usp=sharing) [![YouTube](https://badges.aleen42.com/src/youtube.svg)](https://www.youtube.com/watch?v=__tftoxpBAw&feature=youtu.be)
 
-如果翻译对您有帮助，请帮忙右上角 点击 star.  
-[欢迎加入国内AI商业应用交流群](#国内交流群)
-
 ---
 ## 新闻
 我们现在提供了一个与 Vicuna-7B 对齐的预训练MiniGPT-4！演示GPU内存消耗现在可以低至12GB。
+
+### 翻译同学的话
 Vicuna-13B 目前已知需要 24G 显存。转换权重时，大概需要80G内存，可以尝试增大 swap 空间
+我原本以为，翻译这篇文档就能帮助大家部署，我自己实际部署下来，发现中间有超级多的坑，非常不利于小白。后续我准备执着一个一件部署包，方便大家。敬请期待～ 有新消息我会及时发布到群里面。
+
+如果翻译对您有帮助，请帮忙右上角 点击 star.  
+[欢迎加入国内AI商业应用交流群](#国内交流群)
 
 ## 简介
 - MiniGPT-4使用一个投影层来将来自BLIP-2的冻结视觉编码器与冻结的LLM Vicuna对齐。
