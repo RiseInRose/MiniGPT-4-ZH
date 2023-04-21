@@ -18,7 +18,7 @@ MiniGPT-4: 使用先进的大型语言模型增强视觉语言理解
 ---
 ## 新闻
 我们现在提供了一个与 Vicuna-7B 对齐的预训练MiniGPT-4！演示GPU内存消耗现在可以低至12GB。
-Vicuna-13B 目前已知需要 24G 显存。
+Vicuna-13B 目前已知需要 24G 显存。转换权重时，不启用swap的情况下大概需要80G内存。
 
 ## 简介
 - MiniGPT-4使用一个投影层来将来自BLIP-2的冻结视觉编码器与冻结的LLM Vicuna对齐。
@@ -179,6 +179,10 @@ python -m fastchat.model.apply_delta --base /path/to/llama-13b-hf/  --target /pa
 ValueError: Tokenizer class LLaMATokenizer does not exist or is not currently imported.
 修改 llama-13b-hf/tokenizer_config.json/ 的  "tokenizer_class": "LLaMATokenizer" =>
  "tokenizer_class": "LlamaTokenizer"
+
+killed 
+转换13B需要 80G左右内存，通常的家用电脑无法承载。可以考虑开启swap
+参考：https://www.cnblogs.com/erlou96/p/14578820.html#_label3_0
 
 ```
 现在，您可以准备好使用Vicuna权重了！
