@@ -3,22 +3,32 @@ MiniGPT-4: 使用先进的大型语言模型增强视觉语言理解
 
 所属机构为沙特阿拉伯国王科技大学。
 
-在线演示请点击图像与MiniGPT-4交互。
+## 在线演示
+
+点击图像与MiniGPT-4聊天，了解有关您的图像的信息。
 [![demo](figs/online_demo.png)](https://minigpt-4.github.io)
 
 更多示例请参阅项目主页。
 
+<a href='https://minigpt-4.github.io'><img src='https://img.shields.io/badge/Project-Page-Green'></a>  <a href='MiniGPT_4.pdf'><img src='https://img.shields.io/badge/Paper-PDF-red'></a> <a href='https://huggingface.co/spaces/Vision-CAIR/minigpt4'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue'></a> <a href='https://huggingface.co/Vision-CAIR/MiniGPT-4'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Model-blue'></a> [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1OK4kYsZphwt5DXchKkzMBjYF6jnkqh4R?usp=sharing) [![YouTube](https://badges.aleen42.com/src/youtube.svg)](https://www.youtube.com/watch?v=__tftoxpBAw&feature=youtu.be)
 
 如果翻译对您有帮助，请帮忙右上角 点击 star.  
 [欢迎加入国内AI商业应用交流群](#国内交流群)
 
 ---
+## 新闻
+我们现在提供了一个与Vicuna-7B对齐的预训练MiniGPT-4！演示GPU内存消耗现在可以低至12GB。
 
-介绍：
-MiniGPT-4使用一个投影层将来自BLIP-2的冻结视觉编码器与冻结LLM Vicuna对齐。我们使用两个阶段进行训练。第一个阶段使用大约500万对图片和文本的对齐数据，在4个A100上进行的传统预训练阶段，耗时10小时。在第一个阶段之后，Vicuna能够理解图像，但生成能力受到严重影响。
-为了解决这个问题并提高可用性，我们提出了一种新颖的方法，通过模型本身和ChatGPT一起创建高质量的图像文本对。基于此，我们创建了一个小规模（总共3500对）但高质量的数据集。
-在对话模板中，使用这个数据集进行第二次微调，以显著提高其生成可靠性和整体可用性。令人惊讶的是，这个阶段的计算效率很高，只需一个A100大约7分钟。
-MiniGPT-4展示了许多类似于GPT-4中展示的新兴视觉语言能力。
+
+## 简介
+- MiniGPT-4使用一个投影层来将来自BLIP-2的冻结视觉编码器与冻结的LLM Vicuna对齐。
+- 我们通过两个阶段来训练MiniGPT-4。第一个传统的预训练阶段在使用4个A100大约10小时内，使用大约500万个图像-文本对进行训练。第一阶段过后，Vicuna能够理解图像。但是其生成能力受到了严重的影响。
+- 为了解决这个问题和提高可用性，我们提出了一种通过模型和ChatGPT自身创建高质量图像-文本对的新方法。基于此，我们创建了一个小型（总共3500对）但是高质量的数据集。
+- 第二个微调阶段在对话模板上使用该数据集进行训练，以显著提高其生成可靠性和整体可用性。令人惊讶的是，这个阶段具有计算效率，并且只需要使用单个A100大约7分钟的时间。
+- MiniGPT-4能够产生许多类似于GPT-4中展示的新兴视觉语言能力。
+
+
+![overview](figs/overview.png)
 
 
 入门指南：
@@ -44,7 +54,7 @@ conda activate minigpt4
 
 Vicuna是一种基于LLAMA的LLM，性能接近于ChatGPT，并且是开源的。我们当前使用的是Vicuna-13B v0版本。
 
-为了准备Vicuna的权重，首先从 https://huggingface.co/lmsys/vicuna-13b-delta-v0  下载Vicuna的增量权重。如果你已经安装了git-lfs（https://git-lfs.com） ，可以通过以下方式完成：
+为了准备Vicuna的权重，首先从https://huggingface.co/lmsys/vicuna-13b-delta-v0下载Vicuna的增量权重。如果你已经安装了git-lfs（https://git-lfs.com），可以通过以下方式完成：
 
 ```bash
 git lfs install
@@ -52,37 +62,25 @@ git clone https://huggingface.co/lmsys/vicuna-13b-delta-v0
 ```
 请注意，这并不是直接可用的工作权重，而是工作权重与LLAMA-13B原始权重之间的差异（由于LLAMA的规则，我们无法分发LLAMA的权重）。
 
-然后，您需要获取原始的LLAMA-13B权重，可以按照HuggingFace提供的说明[here](https://huggingface.co/docs/transformers/main/model_doc/llama) 或者从互联网上下载。
+然后，您需要获取原始的LLAMA-13B权重，可以按照HuggingFace提供的说明[here](https://huggingface.co/transformers/model_doc/gpt2.html#transformers-gpt2-preprocessing-script)或者从互联网上下载。
 
 ### 原始权重获取如下：
 提示：
 
-可以通过填写表格来获取LLaMA模型的权重。当然，热心的“网友”已经帮忙泄漏出来了。
-下载地址：https://github.com/facebookresearch/llama/issues/149 里面有很多选择，不安装ipfs的话，可以点击链接，使用迅雷下载。
+可以通过填写表格来获取LLaMA模型的权重。你肯定不用填写，因为“热心网友”已经泄漏出来了
+网址如下：https://github.com/facebookresearch/llama/issues/149
 
+```bash
+git lfs install
+git clone https://huggingface.co/decapoda-research/llama-13b-hf
 ```
-You can download normally, or use these commands from the Kubo CLI:
-
-# Optional: Preload the 7B model. Retrieves the content you don't have yet. Replace with another CID, as needed.
-ipfs refs -r QmbvdJ7KgvZiyaqHw5QtQxRtUd7pCAdkWWbzuvyKusLGTw
-
-# Optional: Pin the 7B model. The GC removes old content you don't use, this prevents the model from being GC'd if enabled.
-ipfs pin add QmbvdJ7KgvZiyaqHw5QtQxRtUd7pCAdkWWbzuvyKusLGTw
-
-# Download from IPFS and save to disk via CLI:
-ipfs get QmbvdJ7KgvZiyaqHw5QtQxRtUd7pCAdkWWbzuvyKusLGTw --output ./7B
-
-
-```
-
-
 下载完权重之后，需要使用转换脚本将它们转换为Hugging Face Transformers格式。可以使用以下命令（示例）调用脚本：
 脚本地址：https://github.com/huggingface/transformers/blob/main/src/transformers/models/llama/convert_llama_weights_to_hf.py
-
 ```bash
 python src/transformers/models/llama/convert_llama_weights_to_hf.py \
     --input_dir /path/to/downloaded/llama/weights --model_size 7B --output_dir /output/path
 ```
+注意替换上面的地址为你的文件系统的真实地址。   
 
 转换完成后，可以通过以下方式加载模型和分词器：
 
@@ -121,44 +119,63 @@ vicuna_weights
 
 然后，在模型配置文件[here](minigpt4/configs/models/minigpt4.yaml#L16)的第16行设定vicuna权重的路径。
 
-准备预训练的MiniGPT-4检查点
+**3. 准备预训练的MiniGPT-4检查点**
 
-要使用我们预训练的模型，请先下载预训练的检查点，可以通过以下链接下载：
+根据您准备的Vicuna模型下载预训练检查点。
 
-[https://drive.google.com/file/d/1a4zLvaiDBr-36pasffmgpvH5P7CKmpze/view?usp=share_link](https://drive.google.com/file/d/1a4zLvaiDBr-36pasffmgpvH5P7CKmpze/view?usp=share_link)
+|                                Checkpoint Aligned with Vicuna 13B                                |                               Checkpoint Aligned with Vicuna 7B                                |
+:------------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------------:
+ [下载](https://drive.google.com/file/d/1a4zLvaiDBr-36pasffmgpvH5P7CKmpze/view?usp=share_link) | [下载](https://drive.google.com/file/d/1RY9jV0dyqLX-o38LrumkKRh6Jtaop58R/view?usp=sharing) 
 
-然后，在[eval_configs/minigpt4_eval.yaml](eval_configs/minigpt4_eval.yaml#L10)中的第11行设置预训练检查点的路径。
+
+然后，在评估配置文件[minigpt4_eval.yaml](eval_configs/minigpt4_eval.yaml#L10)的第11行中设置预训练检查点的路径。
 
 ### 在本地启动演示
 
-使用以下命令在本地机器上运行[demo.py](demo.py)以尝试我们的演示：
+通过运行以下命令在本地机器上试用我们的演示[demo.py](demo.py)：
 
-```bash
-python demo.py --cfg-path eval_configs/minigpt4_eval.yaml
+```
+python demo.py --cfg-path eval_configs/minigpt4_eval.yaml  --gpu-id 0
 ```
 
+为了节省GPU内存，Vicuna默认为8位加载，搜索宽度为1。
+该配置需要大约23G的GPU内存用于Vicuna 13B和11.5G的GPU内存用于Vicuna 7B。
+对于更强大的GPU，您可以在配置文件[minigpt4_eval.yaml](eval_configs/minigpt4_eval.yaml)中将low_resource设置为False并使用更大的搜索宽度以16位运行模型。
+
+感谢@WangRongsheng，您也可以在[Colab](https://colab.research.google.com/drive/1OK4kYsZphwt5DXchKkzMBjYF6jnkqh4R?usp=sharing)上运行我们的代码。
 ### 训练
 MiniGPT-4的训练包含两个对齐阶段。
 
 **1. 第一阶段预训练**
 
-在第一阶段预训练中，使用来自Laion和CC数据集的图像-文本对进行训练，以将视觉和语言模型进行对齐。要下载和准备数据集，请参见[第一阶段数据集准备说明](dataset/README_1_STAGE.md)。在第一阶段之后，视觉特征被映射并且可以被语言模型理解。
-
-要启动第一阶段训练，请运行以下命令。在我们的实验中，我们使用了4个A100。您可以在配置文件[train_configs/minigpt4_stage1_pretrain.yaml](train_configs/minigpt4_stage1_pretrain.yaml)中更改保存路径：
+在第一个预训练阶段中，使用来自Laion和CC数据集的图像文本对训练模型，
+以对齐视觉和语言模型。要下载和准备数据集，请查看我们的[第一阶段数据集准备说明](dataset/README_1_STAGE.md)。
+在第一阶段之后，视觉特征被映射并可以被语言模型理解。
+要启动第一阶段训练，请运行以下命令。在我们的实验中，我们使用了4个A100。
+您可以在配置文件[train_configs/minigpt4_stage1_pretrain.yaml](train_configs/minigpt4_stage1_pretrain.yaml)中更改保存路径。
 
 ```bash
 torchrun --nproc-per-node NUM_GPU train.py --cfg-path train_configs/minigpt4_stage1_pretrain.yaml
 ```
 
-第二阶段微调
+只有第一阶段训练的MiniGPT-4检查点可在此处下载
+[here](https://drive.google.com/file/d/1u9FRRBB3VovP1HxCAlpD9Lw4t4P6-Yq8/view?usp=share_link)。
+与第二阶段之后的模型相比，此检查点经常生成不完整和重复的句子。
 
-在第二阶段，我们使用自己创建的小型高质量图像文本对数据集，并将其转换为对话格式以进一步对齐MiniGPT-4。要下载和准备我们的第二阶段数据集，请参见[第二阶段数据集准备说明](dataset/README_2_STAGE.md)。要启动第二阶段对齐，请首先在[train_configs/minigpt4_stage2_finetune.yaml](train_configs/minigpt4_stage2_finetune.yaml)中指定第1阶段中训练的检查点文件路径。您还可以在那里指定输出路径。然后，运行以下命令。在我们的实验中，我们使用了1个A100。
+
+**2. 第二阶段微调**
+
+在第二个阶段中，我们使用自己创建的小型高质量图像文本对数据集，并将其转换为对话格式，以进一步对齐MiniGPT-4。
+要下载和准备我们的第二阶段数据集，请查看我们的[第二阶段数据集准备说明](dataset/README_2_STAGE.md)。
+要启动第二阶段对齐，请先在[train_configs/minigpt4_stage2_finetune.yaml](train_configs/minigpt4_stage2_finetune.yaml)中指定第1阶段训练的检查点文件的路径。
+您也可以在那里指定输出路径。
+然后，运行以下命令。在我们的实验中，我们使用1个A100。
 
 ```bash
 torchrun --nproc-per-node NUM_GPU train.py --cfg-path train_configs/minigpt4_stage2_finetune.yaml
 ```
 
-第二阶段对齐后，MiniGPT-4能够以连贯且用户友好的方式谈论图像。
+经过第二阶段的对齐，MiniGPT-4能够以连贯且易于使用的方式讨论图像。
 
 ## 致谢
 
@@ -179,15 +196,10 @@ torchrun --nproc-per-node NUM_GPU train.py --cfg-path train_configs/minigpt4_sta
 ## 国内交流群
 群主会不定期发布 各类亮眼项目体验版本 供大家体验，星球主要沉淀一些AI知识，帮助节约时间。欢迎各位读者老爷，漂亮姐姐给我的项目点赞！
 
-|              关注公众号进群               |                      知识星球                       |
-|:-------------------------------:|:-----------------------------------------------:|
-| <img src="./img/qrcode.png" width="300"/> | <img src="./img/WechatIMG81.jpeg" width="300"/> |
+|              直接加群               |                 如果前面的过期，加我拉你入群                  |                      知识星球                       |
+|:-------------------------------:|:-----------------------------------------------:|:-----------------------------------------------:|
+| <img src="./img/WechatIMG88.jpeg" width="300"/> | <img src="./img/WechatIMG87.jpeg" width="300"/> | <img src="./img/WechatIMG81.jpeg" width="300"/> |
 
 ## 许可证.  
 此存储库采用[BSD 3-Clause许可证](LICENSE.md)。   
 许多代码基于[Lavis](https://github.com/salesforce/LAVIS)，这里是BSD 3-Clause许可证[here](LICENSE_Lavis.md)。   
-
-## 感谢
-本项目fork 自 https://github.com/Vision-CAIR/MiniGPT-4   
-翻译大部分来自 https://github.com/Vision-CAIR/MiniGPT-4
-
