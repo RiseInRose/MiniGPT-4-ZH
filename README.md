@@ -18,7 +18,7 @@ MiniGPT-4: 使用先进的大型语言模型增强视觉语言理解
 ---
 ## 新闻
 我们现在提供了一个与 Vicuna-7B 对齐的预训练MiniGPT-4！演示GPU内存消耗现在可以低至12GB。
-Vicuna-13B 目前已知需要 24G 显存。转换权重时，不启用swap的情况下大概需要80G内存。
+Vicuna-13B 目前已知需要 24G 显存。转换权重时，大概需要80G内存，可以尝试增大 swap 空间
 
 ## 简介
 - MiniGPT-4使用一个投影层来将来自BLIP-2的冻结视觉编码器与冻结的LLM Vicuna对齐。
@@ -61,7 +61,8 @@ Vicuna是一种基于LLAMA的LLM，性能接近于ChatGPT，并且是开源的�
 
 ```bash
 git lfs install
-git clone https://huggingface.co/lmsys/vicuna-13b-delta-v0
+# git clone https://huggingface.co/lmsys/vicuna-13b-delta-v0 这个模型有问题，会报错
+git clone https://huggingface.co/Ejafa/vicuna_13B_vanilla_1.1   # 请使用如下模型
 ```
 请注意，这并不是直接可用的工作权重，而是工作权重与LLAMA-13B原始权重之间的差异（由于LLAMA的规则，我们无法分发LLAMA的权重）。
 
@@ -185,6 +186,9 @@ killed
 参考：https://www.cnblogs.com/erlou96/p/14578820.html#_label3_0
     https://timberkito.com/?p=98 
 
+
+RuntimeError: The size of tensor a (32000) must match the size of tensor b (32001) at non-singleton dimension 0
+参考：https://github.com/lm-sys/FastChat/issues/486
 ```
 现在，您可以准备好使用Vicuna权重了！
 
