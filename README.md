@@ -17,8 +17,8 @@ MiniGPT-4: 使用先进的大型语言模型增强视觉语言理解
 
 ---
 ## 新闻
-我们现在提供了一个与Vicuna-7B对齐的预训练MiniGPT-4！演示GPU内存消耗现在可以低至12GB。
-
+我们现在提供了一个与 Vicuna-7B 对齐的预训练MiniGPT-4！演示GPU内存消耗现在可以低至12GB。
+Vicuna-13B 目前已知需要 24G 显存。
 
 ## 简介
 - MiniGPT-4使用一个投影层来将来自BLIP-2的冻结视觉编码器与冻结的LLM Vicuna对齐。
@@ -46,6 +46,9 @@ conda activate minigpt4
 ```
 
 **2.准备预训练的Vicuna权重**
+
+不想自己折腾的直接下载我准备好的权重（大概4月22号弄好），然后跳转到第 3 步
+
 
 当前版本的MiniGPT-4是建立在Vicuna-13B v0版本之上的。请参考我们的说明[here](PrepareVicuna.md)来准备Vicuna权重。
 
@@ -119,13 +122,18 @@ ipfs get QmbvdJ7KgvZiyaqHw5QtQxRtUd7pCAdkWWbzuvyKusLGTw --output ./7B
 
 git clone https://github.com/lm-sys/FastChat
 cd FastChat
+# 查看tag
+git tag
+# 切换到最新的tag分支
+git checkout v0.2.3
+# 安装
 pip install e .
 
+# 安装其他依赖
 pip install transformers[sentencepiece]
 
 # 注意，这里，需要安装transforms 环境。国内 镜像源更新不及时，请使用原版pip源，或者直接从项目安装
 其他依赖：如果出现timeout，可以使用魔法，或者版本不要求最新时，使用国内源
-
 
 ```
 报错解决：
