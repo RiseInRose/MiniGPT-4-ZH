@@ -89,11 +89,8 @@ ipfs pin add QmbvdJ7KgvZiyaqHw5QtQxRtUd7pCAdkWWbzuvyKusLGTw
 ipfs get QmbvdJ7KgvZiyaqHw5QtQxRtUd7pCAdkWWbzuvyKusLGTw --output ./7B
 
 ```
-
-
 下载完权重之后，需要使用转换脚本将它们转换为Hugging Face Transformers格式。可以使用以下命令（示例）调用脚本：
 脚本地址：https://github.com/huggingface/transformers/blob/main/src/transformers/models/llama/convert_llama_weights_to_hf.py
-
 
 ```
 # 转换之前，建议 安装环境依赖，否则转模型到一半会报错，及其浪费时间。
@@ -102,9 +99,23 @@ git clone https://github.com/lm-sys/FastChat
 cd FastChat
 pip install e .
 
+pip install transformers[sentencepiece]
+
 # 注意，这里，需要安装transforms 环境。国内 镜像源更新不及时，请使用原版pip源，或者直接从项目安装
 其他依赖：如果出现timeout，可以使用魔法，或者版本不要求最新时，使用国内源
+
+
 ```
+报错解决：
+```
+ValueError: Couldn't instantiate the backend tokenizer from one of:
+
+https://stackoverflow.com/questions/65431837/transformers-v4-x-convert-slow-tokenizer-to-fast-tokenizer
+
+pip install transformers[sentencepiece]
+
+```
+
 
 ```bash
 python src/transformers/models/llama/convert_llama_weights_to_hf.py \
