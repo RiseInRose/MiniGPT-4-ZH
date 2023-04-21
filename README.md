@@ -174,6 +174,13 @@ pip install git+https://github.com/huggingface/transformers@v0.1.10
 python -m fastchat.model.apply_delta --base /path/to/llama-13b-hf/  --target /path/to/save/working/vicuna/weight/  --delta /path/to/vicuna-13b-delta-v0/
 ```
 
+报错解决：
+```
+ValueError: Tokenizer class LLaMATokenizer does not exist or is not currently imported.
+修改 llama-13b-hf/tokenizer_config.json/ 的  "tokenizer_class": "LLaMATokenizer" =>
+ "tokenizer_class": "LlamaTokenizer"
+
+```
 现在，您可以准备好使用Vicuna权重了！
 
 
