@@ -70,12 +70,17 @@ git clone https://huggingface.co/lmsys/vicuna-13b-delta-v0
 可以通过填写表格来获取LLaMA模型的权重。你肯定不用填写，因为“热心网友”已经泄漏出来了
 网址如下：https://github.com/facebookresearch/llama/issues/149
 
+小白请推荐百度网盘 https://pan.baidu.com/s/1ujG85wgQFuIyf74N9k2MDQ?pwd=nu4d
+不充会员的，可以使用 ipfs，或者迅雷。具体方法如下：
+
 ```
 # 找到这个部分，你可以直接点击链接进入，使用迅雷下载。
 Full backup: ipfs://Qmb9y5GCkTG7ZzbBWMu2BXwMkzyCKcUjtEKPpgdZ7GEFKm
 
-7B: ipfs://QmbvdJ7KgvZiyaqHw5QtQxRtUd7pCAdkWWbzuvyKusLGTw 13B: ipfs://QmPCfCEERStStjg4kfj3cmCUu1TP7pVQbxdFMwnhpuJtxk 30B: ipfs://QmSD8cxm4zvvnD35KKFu8D9VjXAavNoGWemPW1pQ3AF9ZZ 65B: ipfs://QmdWH379NQu8XoesA8AFw9nKV2MpGR4KohK7WyugadAKTh
-
+7B: ipfs://QmbvdJ7KgvZiyaqHw5QtQxRtUd7pCAdkWWbzuvyKusLGTw 
+13B: ipfs://QmPCfCEERStStjg4kfj3cmCUu1TP7pVQbxdFMwnhpuJtxk 
+30B: ipfs://QmSD8cxm4zvvnD35KKFu8D9VjXAavNoGWemPW1pQ3AF9ZZ 
+65B: ipfs://QmdWH379NQu8XoesA8AFw9nKV2MpGR4KohK7WyugadAKTh
 
 也可以使用Kubo CLI中的以下命令：
 
@@ -89,6 +94,23 @@ ipfs pin add QmbvdJ7KgvZiyaqHw5QtQxRtUd7pCAdkWWbzuvyKusLGTw
 ipfs get QmbvdJ7KgvZiyaqHw5QtQxRtUd7pCAdkWWbzuvyKusLGTw --output ./7B
 
 ```
+下载完成后，去百度网盘下载 tokenizer_checklist.chk tokenizer.model 这2个文件。 
+
+文件夹结构如下：
+```
+.
+├── 13B
+│   ├── =
+│   ├── checklist.chk
+│   ├── consolidated.00.pth
+│   ├── consolidated.01.pth
+│   └── params.json
+├── tokenizer_checklist.chk
+└── tokenizer.model
+
+```
+
+
 下载完权重之后，需要使用转换脚本将它们转换为Hugging Face Transformers格式。可以使用以下命令（示例）调用脚本：
 脚本地址：https://github.com/huggingface/transformers/blob/main/src/transformers/models/llama/convert_llama_weights_to_hf.py
 
