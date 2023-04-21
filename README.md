@@ -183,6 +183,7 @@ ValueError: Tokenizer class LLaMATokenizer does not exist or is not currently im
 killed 
 转换13B需要 80G左右内存，通常的家用电脑无法承载。可以考虑开启swap
 参考：https://www.cnblogs.com/erlou96/p/14578820.html#_label3_0
+    https://timberkito.com/?p=98 
 
 ```
 现在，您可以准备好使用Vicuna权重了！
