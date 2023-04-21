@@ -70,12 +70,33 @@ git clone https://huggingface.co/lmsys/vicuna-13b-delta-v0
 可以通过填写表格来获取LLaMA模型的权重。你肯定不用填写，因为“热心网友”已经泄漏出来了
 网址如下：https://github.com/facebookresearch/llama/issues/149
 
-```bash
-git lfs install
-git clone https://huggingface.co/decapoda-research/llama-13b-hf
 ```
+# 找到这个部分，你可以直接点击链接进入，使用迅雷下载。
+Full backup: ipfs://Qmb9y5GCkTG7ZzbBWMu2BXwMkzyCKcUjtEKPpgdZ7GEFKm
+
+7B: ipfs://QmbvdJ7KgvZiyaqHw5QtQxRtUd7pCAdkWWbzuvyKusLGTw 13B: ipfs://QmPCfCEERStStjg4kfj3cmCUu1TP7pVQbxdFMwnhpuJtxk 30B: ipfs://QmSD8cxm4zvvnD35KKFu8D9VjXAavNoGWemPW1pQ3AF9ZZ 65B: ipfs://QmdWH379NQu8XoesA8AFw9nKV2MpGR4KohK7WyugadAKTh
+
+
+也可以使用Kubo CLI中的以下命令：
+
+# 可选：预加载 7B 模型。检索您尚未拥有的内容。如有需要，请替换为其他 CID。
+ipfs refs -r QmbvdJ7KgvZiyaqHw5QtQxRtUd7pCAdkWWbzuvyKusLGTw
+
+# 可选：固定7B模型。GC会删除您不使用的旧内容，这可以防止启用 GC 后模型被清除。
+ipfs pin add QmbvdJ7KgvZiyaqHw5QtQxRtUd7pCAdkWWbzuvyKusLGTw
+
+# 通过CLI从IPFS下载并保存到磁盘：
+ipfs get QmbvdJ7KgvZiyaqHw5QtQxRtUd7pCAdkWWbzuvyKusLGTw --output ./7B
+
+```
+
+
 下载完权重之后，需要使用转换脚本将它们转换为Hugging Face Transformers格式。可以使用以下命令（示例）调用脚本：
 脚本地址：https://github.com/huggingface/transformers/blob/main/src/transformers/models/llama/convert_llama_weights_to_hf.py
+
+注意，这里，需要安装transforms 环境。国内 镜像源更新不及时，请使用原版pip源，或者直接从项目安装
+`pip install e .`
+
 ```bash
 python src/transformers/models/llama/convert_llama_weights_to_hf.py \
     --input_dir /path/to/downloaded/llama/weights --model_size 7B --output_dir /output/path
@@ -194,12 +215,16 @@ torchrun --nproc-per-node NUM_GPU train.py --cfg-path train_configs/minigpt4_sta
 ```
 
 ## 国内交流群
-群主会不定期发布 各类亮眼项目体验版本 供大家体验，星球主要沉淀一些AI知识，帮助节约时间。欢迎各位读者老爷，漂亮姐姐给我的项目点赞！
+群主会不定期发布 各类亮眼项目体验版本 供大家体验，星球主要沉淀一些商业AI最新讯息，帮助大家节约时间。欢迎各位读者老爷，漂亮姐姐给我的项目点赞！
 
-|              直接加群               |                 如果前面的过期，加我拉你入群                  |                      知识星球                       |
-|:-------------------------------:|:-----------------------------------------------:|:-----------------------------------------------:|
-| <img src="./img/WechatIMG88.jpeg" width="300"/> | <img src="./img/WechatIMG87.jpeg" width="300"/> | <img src="./img/WechatIMG81.jpeg" width="300"/> |
+|              关注公众号加群               |                      知识星球                       |
+|:-------------------------------:|:-----------------------------------------------:|
+| <img src="./img/qrcode.png" width="300"/> |  <img src="./img/WechatIMG81.jpeg" width="300"/> |
 
 ## 许可证.  
 此存储库采用[BSD 3-Clause许可证](LICENSE.md)。   
 许多代码基于[Lavis](https://github.com/salesforce/LAVIS)，这里是BSD 3-Clause许可证[here](LICENSE_Lavis.md)。   
+
+## 感谢
+本项目 fork 自 https://github.com/Vision-CAIR/MiniGPT-4
+大部分翻译来自 https://github.com/Vision-CAIR/MiniGPT-4
