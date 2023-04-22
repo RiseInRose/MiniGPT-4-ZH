@@ -285,6 +285,8 @@ torchrun --nproc-per-node NUM_GPU train.py --cfg-path train_configs/minigpt4_sta
 ```
 
 ## 国内交流群
+目前群主部署了minigpt4 的在线版本，星球的朋友可以先体验，不想加星球的，可以晚一点白嫖～
+
 群主会不定期发布 各类亮眼项目体验版本 供大家体验，星球主要沉淀一些商业AI最新讯息，帮助大家节约时间。欢迎各位读者老爷，漂亮姐姐给我的项目点赞！
 
 |              关注公众号加群               |                      知识星球                       |
