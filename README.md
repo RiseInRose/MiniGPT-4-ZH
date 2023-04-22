@@ -230,8 +230,9 @@ vicuna_weights
 python demo.py --cfg-path eval_configs/minigpt4_eval.yaml  --gpu-id 0
 ```
 
-为了节省GPU内存，Vicuna默认为8位加载，搜索宽度为1。
-该配置需要大约23G的GPU内存用于Vicuna 13B和11.5G的GPU内存用于Vicuna 7B。
+为了节省GPU内存，Vicuna默认为8位加载，搜索宽度为1。  
+该配置需要大约23G的GPU内存用于Vicuna 13B和11.5G的GPU内存用于Vicuna 7B。  
+
 对于更强大的GPU，您可以在配置文件[minigpt4_eval.yaml](eval_configs/minigpt4_eval.yaml)中将low_resource设置为False并使用更大的搜索宽度以16位运行模型。
 
 感谢@WangRongsheng，您也可以在[Colab](https://colab.research.google.com/drive/1OK4kYsZphwt5DXchKkzMBjYF6jnkqh4R?usp=sharing)上运行我们的代码。
