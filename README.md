@@ -61,12 +61,12 @@ conda activate minigpt4
 
 Vicuna是一种基于LLAMA的LLM，性能接近于ChatGPT，并且是开源的。我们当前使用的是Vicuna-13B v0版本。
 
-为了准备Vicuna的权重，首先从 https://huggingface.co/lmsys/vicuna-13b-delta-v0 下载Vicuna的增量权重。如果你已经安装了git-lfs（https://git-lfs.com）， 可以通过以下方式完成：
+为了准备Vicuna的权重，首先从 https://huggingface.co/lmsys/vicuna-13b-delta-v1.1 下载Vicuna的增量权重。如果你已经安装了git-lfs（https://git-lfs.com）， 可以通过以下方式完成：
 
 ```bash
 git lfs install
-# git clone https://huggingface.co/lmsys/vicuna-13b-delta-v0 这个模型有问题，会报错
-git clone https://huggingface.co/Ejafa/vicuna_13B_vanilla_1.1   # 请使用如下模型
+# git clone https://huggingface.co/lmsys/vicuna-13b-delta-v0 
+git clone https://huggingface.co/lmsys/vicuna-13b-delta-v1.1 
 ```
 请注意，这并不是直接可用的工作权重，而是工作权重与LLAMA-13B原始权重之间的差异（由于LLAMA的规则，我们无法分发LLAMA的权重）。
 
@@ -141,6 +141,12 @@ pip install transformers[sentencepiece]
 其他依赖：如果出现timeout，可以使用魔法，或者版本不要求最新时，使用国内源
 
 ```
+
+```bash
+python src/transformers/models/llama/convert_llama_weights_to_hf.py \
+    --input_dir /path/to/downloaded/llama/weights --model_size 7B --output_dir /output/path
+```
+
 报错解决：
 ```
 ValueError: Couldn't instantiate the backend tokenizer from one of:
@@ -151,11 +157,6 @@ pip install transformers[sentencepiece]
 
 ```
 
-
-```bash
-python src/transformers/models/llama/convert_llama_weights_to_hf.py \
-    --input_dir /path/to/downloaded/llama/weights --model_size 7B --output_dir /output/path
-```
 注意替换上面的地址为你的文件系统的真实地址。   
 
 转换完成后，可以通过以下方式加载模型和分词器：
