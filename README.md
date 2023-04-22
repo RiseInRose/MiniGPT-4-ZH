@@ -75,6 +75,11 @@ git clone https://huggingface.co/lmsys/vicuna-13b-delta-v1.1
 ### 原始权重获取如下：
 提示：
 
+直接使用迅雷下载，[种子在此](CDEE3052D85C697B84F4C1192F43A2276C0DAEA0.torrent)
+
+下面是备选方案：
+---- 备选方案开始。----
+
 可以通过填写表格来获取LLaMA模型的权重。你肯定不用填写，因为“热心网友”已经泄漏出来了
 网址如下：https://github.com/facebookresearch/llama/issues/149
 
@@ -103,6 +108,8 @@ ipfs get QmbvdJ7KgvZiyaqHw5QtQxRtUd7pCAdkWWbzuvyKusLGTw --output ./7B
 
 ```
 下载完成后，去百度网盘下载 tokenizer_checklist.chk tokenizer.model 这2个文件。 
+
+---- 备选方案结束。----
 
 文件夹结构如下：
 ```
