@@ -60,7 +60,7 @@ conda activate minigpt4
 ### here 的翻译如下：
 如何准备Vicuna权重
 
-Vicuna是一种基于LLAMA的LLM，性能接近于ChatGPT，并且是开源的。我们当前使用的是Vicuna-13B v0版本。
+Vicuna是一种基于LLAMA的LLM，性能接近于ChatGPT，并且是开源的。我们当前使用的是Vicuna-13B v1.1版本。
 
 为了准备Vicuna的权重，首先从 https://huggingface.co/lmsys/vicuna-13b-delta-v1.1 下载Vicuna的增量权重。如果你已经安装了git-lfs（https://git-lfs.com）， 可以通过以下方式完成：
 
