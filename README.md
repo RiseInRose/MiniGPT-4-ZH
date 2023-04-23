@@ -23,6 +23,10 @@ Vicuna-13B fp16 目前已知需要 35G 显存，加载图片后，会到43G，�
 
 这是我最近发现的一个[一键安装包](https://colab.research.google.com/github/camenduru/MiniGPT-4-colab/blob/main/minigpt4_colab.ipynb#scrollTo=QdfSfmJD4fAc)。感谢@camenduru 同学。很奇怪的是，他的模型只有433MB大小。而我转出来的有37G。感兴趣的同学可以同时比较一下2套的细节。   
 
+感谢@成浩群友共享的 7B 13B权重。目前他自己跑过7B的。没有太大问题。
+链接：https://pan.baidu.com/s/1NezLZEUw9_14XsOrp8Ozyw?pwd=yc8i 
+提取码：yc8i 
+
 如果翻译对您有帮助，请帮忙右上角 点击 star.  
 [欢迎加入国内AI商业应用交流群](#国内交流群)
 
