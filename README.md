@@ -248,6 +248,9 @@ python demo.py --cfg-path eval_configs/minigpt4_eval.yaml  --gpu-id 0
 
 对于更强大的GPU，您可以在配置文件[minigpt4_eval.yaml](eval_configs/minigpt4_eval.yaml)中将low_resource设置为False并使用更大的搜索宽度以16位运行模型。
 
+windows 部署遇到问题可以参考这个 issue https://github.com/Vision-CAIR/MiniGPT-4/issues/28
+实际上如果显存高，可以修改 minigpt4/models/mini_gpt4.py  92行 load_in_8bit=False 关闭8bit，这样就可以不安装这个包。
+
 感谢@WangRongsheng，您也可以在[Colab](https://colab.research.google.com/drive/1OK4kYsZphwt5DXchKkzMBjYF6jnkqh4R?usp=sharing)上运行我们的代码。
 ### 训练
 MiniGPT-4的训练包含两个对齐阶段。
