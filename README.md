@@ -16,12 +16,16 @@ MiniGPT-4: 使用先进的大型语言模型增强视觉语言理解
 ## 新闻
 我们现在提供了一个与 Vicuna-7B 对齐的预训练MiniGPT-4！演示GPU内存消耗现在可以低至12GB。
 
-### 翻译同学的话
+---
+## 翻译同学的话
 Vicuna-13B fp16 目前已知需要 35G 显存，加载图片后，会到43G，运行时内存高峰大概14G。   
 转换权重时，大概需要80G内存，可以尝试增大 swap 空间。   
 我原本以为，翻译这篇文档就能帮助大家部署，我自己实际部署下来，发现中间有超级多的坑，非常不利于小白。后续我准备制作一个一键部署包，方便大家。敬请期待～ 有新消息我会及时发布到群里面。
 
-这是我最近发现的一个[一键安装包](https://colab.research.google.com/github/camenduru/MiniGPT-4-colab/blob/main/minigpt4_colab.ipynb#scrollTo=QdfSfmJD4fAc)。感谢@camenduru 同学。很奇怪的是，他的模型只有433MB大小。而我转出来的有37G。感兴趣的同学可以同时比较一下2套的细节。   
+这是我最近发现的一个[一键安装包](https://colab.research.google.com/github/camenduru/MiniGPT-4-colab/blob/main/minigpt4_colab.ipynb#scrollTo=QdfSfmJD4fAc)。感谢@camenduru 同学。很奇怪的是，他的模型只有433MB大小。而我转出来的有37G。      
+问题解决了，项目实际运行时，还是需要去下载模型的。   
+
+---
 
 目前测试下来，一键安装包，运行时需要17G显存。   
 
