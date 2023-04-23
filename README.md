@@ -53,8 +53,7 @@ conda activate minigpt4
 
 **2.准备预训练的Vicuna权重**
 
-不想自己折腾的直接下载我准备好的权重（公开可能会有版权问题，所以暂时先放到微信群了。），然后跳转到第 3 步
-
+不想自己折腾的直接下载我们准备好的权重（公开可能会有版权问题，所以暂时先放到微信群了。），然后跳转到第 3 步
 
 当前版本的MiniGPT-4是建立在Vicuna-13B v0版本之上的。请参考我们的说明[here](PrepareVicuna.md)来准备Vicuna权重。
 
@@ -62,10 +61,6 @@ conda activate minigpt4
 如何准备Vicuna权重
 
 Vicuna是一种基于LLAMA的LLM，性能接近于ChatGPT，并且是开源的。我们当前使用的是Vicuna-13B v0版本。
-
-感谢@成浩群友共享的 7B 13B 融合好的权重。目前他自己跑过7B的。没有太大问题。
-链接：https://pan.baidu.com/s/1NezLZEUw9_14XsOrp8Ozyw?pwd=yc8i 
-提取码：yc8i 
 
 为了准备Vicuna的权重，首先从 https://huggingface.co/lmsys/vicuna-13b-delta-v1.1 下载Vicuna的增量权重。如果你已经安装了git-lfs（https://git-lfs.com）， 可以通过以下方式完成：
 
