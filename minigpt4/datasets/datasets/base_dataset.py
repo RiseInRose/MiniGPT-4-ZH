@@ -13,9 +13,12 @@ from torch.utils.data.dataloader import default_collate
 
 
 class BaseDataset(Dataset):
-    def __init__(
-        self, vis_processor=None, text_processor=None, vis_root=None, ann_paths=[]
-    ):
+
+    def __init__(self,
+                 vis_processor=None,
+                 text_processor=None,
+                 vis_root=None,
+                 ann_paths=[]):
         """
         vis_root (string): Root directory of images (e.g. coco/images/)
         ann_root (string): directory to store the annotation file
@@ -24,7 +27,8 @@ class BaseDataset(Dataset):
 
         self.annotation = []
         for ann_path in ann_paths:
-            self.annotation.extend(json.load(open(ann_path, "r"))['annotations'])
+            self.annotation.extend(
+                json.load(open(ann_path, "r"))['annotations'])
 
         self.vis_processor = vis_processor
         self.text_processor = text_processor
@@ -47,6 +51,7 @@ class BaseDataset(Dataset):
 
 
 class ConcatDataset(ConcatDataset):
+
     def __init__(self, datasets: Iterable[Dataset]) -> None:
         super().__init__(datasets)
 
@@ -63,6 +68,8 @@ class ConcatDataset(ConcatDataset):
 
         samples_shared_keys = []
         for s in samples:
-            samples_shared_keys.append({k: s[k] for k in s.keys() if k in shared_keys})
+            samples_shared_keys.append(
+                {k: s[k]
+                 for k in s.keys() if k in shared_keys})
 
         return self.datasets[0].collater(samples_shared_keys)

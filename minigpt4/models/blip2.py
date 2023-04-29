@@ -26,6 +26,7 @@ from transformers import BertTokenizer
 
 
 class Blip2Base(BaseModel):
+
     @classmethod
     def init_tokenizer(cls):
         tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
@@ -43,7 +44,10 @@ class Blip2Base(BaseModel):
             return contextlib.nullcontext()
 
     @classmethod
-    def init_Qformer(cls, num_query_token, vision_width, cross_attention_freq=2):
+    def init_Qformer(cls,
+                     num_query_token,
+                     vision_width,
+                     cross_attention_freq=2):
         encoder_config = BertConfig.from_pretrained("bert-base-uncased")
         encoder_config.encoder_width = vision_width
         # insert cross-attention layer every other block
@@ -52,28 +56,26 @@ class Blip2Base(BaseModel):
         encoder_config.query_length = num_query_token
         Qformer = BertLMHeadModel(config=encoder_config)
         query_tokens = nn.Parameter(
-            torch.zeros(1, num_query_token, encoder_config.hidden_size)
-        )
-        query_tokens.data.normal_(mean=0.0, std=encoder_config.initializer_range)
+            torch.zeros(1, num_query_token, encoder_config.hidden_size))
+        query_tokens.data.normal_(mean=0.0,
+                                  std=encoder_config.initializer_range)
         return Qformer, query_tokens
 
     @classmethod
-    def init_vision_encoder(
-        cls, model_name, img_size, drop_path_rate, use_grad_checkpoint, precision
-    ):
+    def init_vision_encoder(cls, model_name, img_size, drop_path_rate,
+                            use_grad_checkpoint, precision):
         assert model_name == "eva_clip_g", "vit model must be eva_clip_g for current version of MiniGPT-4"
-        visual_encoder = create_eva_vit_g(
-            img_size, drop_path_rate, use_grad_checkpoint, precision
-        )
+        visual_encoder = create_eva_vit_g(img_size, drop_path_rate,
+                                          use_grad_checkpoint, precision)
 
         ln_vision = LayerNorm(visual_encoder.num_features)
         return visual_encoder, ln_vision
 
     def load_from_pretrained(self, url_or_filename):
         if is_url(url_or_filename):
-            cached_file = download_cached_file(
-                url_or_filename, check_hash=False, progress=True
-            )
+            cached_file = download_cached_file(url_or_filename,
+                                               check_hash=False,
+                                               progress=True)
             checkpoint = torch.load(cached_file, map_location="cpu")
         elif os.path.isfile(url_or_filename):
             checkpoint = torch.load(url_or_filename, map_location="cpu")
@@ -121,7 +123,7 @@ def compute_sim_matrix(model, data_loader, **kwargs):
     text_embeds = []
     text_atts = []
     for i in range(0, num_text, text_bs):
-        text = texts[i : min(num_text, i + text_bs)]
+        text = texts[i:min(num_text, i + text_bs)]
         text_input = model.tokenizer(
             text,
             padding="max_length",
@@ -162,9 +164,8 @@ def compute_sim_matrix(model, data_loader, **kwargs):
         sims_matrix.append(sim_i2t)
     sims_matrix = torch.stack(sims_matrix, dim=0)
 
-    score_matrix_i2t = torch.full(
-        (len(data_loader.dataset.image), len(texts)), -100.0
-    ).to(model.device)
+    score_matrix_i2t = torch.full((len(data_loader.dataset.image), len(texts)),
+                                  -100.0).to(model.device)
 
     num_tasks = dist_utils.get_world_size()
     rank = dist_utils.get_rank()
@@ -173,10 +174,10 @@ def compute_sim_matrix(model, data_loader, **kwargs):
     end = min(sims_matrix.size(0), start + step)
 
     for i, sims in enumerate(
-        metric_logger.log_every(sims_matrix[start:end], 50, header)
-    ):
+            metric_logger.log_every(sims_matrix[start:end], 50, header)):
         topk_sim, topk_idx = sims.topk(k=k_test, dim=0)
-        image_inputs = vit_feats[start + i].repeat(k_test, 1, 1).to(model.device)
+        image_inputs = vit_feats[start + i].repeat(k_test, 1,
+                                                   1).to(model.device)
         score = model.compute_itm(
             image_inputs=image_inputs,
             text_ids=text_ids[topk_idx],
@@ -185,17 +186,15 @@ def compute_sim_matrix(model, data_loader, **kwargs):
         score_matrix_i2t[start + i, topk_idx] = score + topk_sim
 
     sims_matrix = sims_matrix.t()
-    score_matrix_t2i = torch.full(
-        (len(texts), len(data_loader.dataset.image)), -100.0
-    ).to(model.device)
+    score_matrix_t2i = torch.full((len(texts), len(data_loader.dataset.image)),
+                                  -100.0).to(model.device)
 
     step = sims_matrix.size(0) // num_tasks + 1
     start = rank * step
     end = min(sims_matrix.size(0), start + step)
 
     for i, sims in enumerate(
-        metric_logger.log_every(sims_matrix[start:end], 50, header)
-    ):
+            metric_logger.log_every(sims_matrix[start:end], 50, header)):
         topk_sim, topk_idx = sims.topk(k=k_test, dim=0)
         image_inputs = vit_feats[topk_idx.cpu()].to(model.device)
         score = model.compute_itm(
@@ -207,12 +206,10 @@ def compute_sim_matrix(model, data_loader, **kwargs):
 
     if dist_utils.is_dist_avail_and_initialized():
         dist.barrier()
-        torch.distributed.all_reduce(
-            score_matrix_i2t, op=torch.distributed.ReduceOp.SUM
-        )
-        torch.distributed.all_reduce(
-            score_matrix_t2i, op=torch.distributed.ReduceOp.SUM
-        )
+        torch.distributed.all_reduce(score_matrix_i2t,
+                                     op=torch.distributed.ReduceOp.SUM)
+        torch.distributed.all_reduce(score_matrix_t2i,
+                                     op=torch.distributed.ReduceOp.SUM)
 
     total_time = time.time() - start_time
     total_time_str = str(datetime.timedelta(seconds=int(total_time)))

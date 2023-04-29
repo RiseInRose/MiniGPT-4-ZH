@@ -16,6 +16,7 @@ from torchvision.transforms.functional import InterpolationMode
 
 
 class BlipImageBaseProcessor(BaseProcessor):
+
     def __init__(self, mean=None, std=None):
         if mean is None:
             mean = (0.48145466, 0.4578275, 0.40821073)
@@ -27,6 +28,7 @@ class BlipImageBaseProcessor(BaseProcessor):
 
 @registry.register_processor("blip_caption")
 class BlipCaptionProcessor(BaseProcessor):
+
     def __init__(self, prompt="", max_words=50):
         self.prompt = prompt
         self.max_words = max_words
@@ -63,27 +65,31 @@ class BlipCaptionProcessor(BaseProcessor):
         # truncate caption
         caption_words = caption.split(" ")
         if len(caption_words) > self.max_words:
-            caption = " ".join(caption_words[: self.max_words])
+            caption = " ".join(caption_words[:self.max_words])
 
         return caption
 
 
 @registry.register_processor("blip2_image_train")
 class Blip2ImageTrainProcessor(BlipImageBaseProcessor):
-    def __init__(self, image_size=224, mean=None, std=None, min_scale=0.5, max_scale=1.0):
+
+    def __init__(self,
+                 image_size=224,
+                 mean=None,
+                 std=None,
+                 min_scale=0.5,
+                 max_scale=1.0):
         super().__init__(mean=mean, std=std)
 
-        self.transform = transforms.Compose(
-            [
-                transforms.RandomResizedCrop(
-                    image_size,
-                    scale=(min_scale, max_scale),
-                    interpolation=InterpolationMode.BICUBIC,
-                ),
-                transforms.ToTensor(),
-                self.normalize,
-            ]
-        )
+        self.transform = transforms.Compose([
+            transforms.RandomResizedCrop(
+                image_size,
+                scale=(min_scale, max_scale),
+                interpolation=InterpolationMode.BICUBIC,
+            ),
+            transforms.ToTensor(),
+            self.normalize,
+        ])
 
     def __call__(self, item):
         return self.transform(item)
@@ -112,18 +118,16 @@ class Blip2ImageTrainProcessor(BlipImageBaseProcessor):
 
 @registry.register_processor("blip2_image_eval")
 class Blip2ImageEvalProcessor(BlipImageBaseProcessor):
+
     def __init__(self, image_size=224, mean=None, std=None):
         super().__init__(mean=mean, std=std)
 
-        self.transform = transforms.Compose(
-            [
-                transforms.Resize(
-                    (image_size, image_size), interpolation=InterpolationMode.BICUBIC
-                ),
-                transforms.ToTensor(),
-                self.normalize,
-            ]
-        )
+        self.transform = transforms.Compose([
+            transforms.Resize((image_size, image_size),
+                              interpolation=InterpolationMode.BICUBIC),
+            transforms.ToTensor(),
+            self.normalize,
+        ])
 
     def __call__(self, item):
         return self.transform(item)

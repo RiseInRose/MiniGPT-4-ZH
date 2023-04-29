@@ -35,7 +35,9 @@ from minigpt4.tasks import *
 def parse_args():
     parser = argparse.ArgumentParser(description="Training")
 
-    parser.add_argument("--cfg-path", required=True, help="path to configuration file.")
+    parser.add_argument("--cfg-path",
+                        required=True,
+                        help="path to configuration file.")
     parser.add_argument(
         "--options",
         nargs="+",
@@ -66,7 +68,8 @@ def get_runner_class(cfg):
     """
     Get runner class from config. Default to epoch-based runner.
     """
-    runner_cls = registry.get_runner_class(cfg.run_cfg.get("runner", "runner_base"))
+    runner_cls = registry.get_runner_class(
+        cfg.run_cfg.get("runner", "runner_base"))
 
     return runner_cls
 
@@ -93,9 +96,11 @@ def main():
     datasets = task.build_datasets(cfg)
     model = task.build_model(cfg)
 
-    runner = get_runner_class(cfg)(
-        cfg=cfg, job_id=job_id, task=task, model=model, datasets=datasets
-    )
+    runner = get_runner_class(cfg)(cfg=cfg,
+                                   job_id=job_id,
+                                   task=task,
+                                   model=model,
+                                   datasets=datasets)
     runner.train()
 
 

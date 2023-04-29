@@ -15,7 +15,8 @@ def setup_task(cfg):
 
     task_name = cfg.run_cfg.task
     task = registry.get_task_class(task_name).setup_task(cfg=cfg)
-    assert task is not None, "Task {} not properly registered.".format(task_name)
+    assert task is not None, "Task {} not properly registered.".format(
+        task_name)
 
     return task
 

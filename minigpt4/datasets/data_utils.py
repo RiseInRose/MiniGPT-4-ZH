@@ -25,7 +25,6 @@ from torch.utils.data.dataset import IterableDataset
 from minigpt4.common.registry import registry
 from minigpt4.datasets.datasets.base_dataset import ConcatDataset
 
-
 decord.bridge.set_bridge("torch")
 MAX_INT = registry.get("MAX_INT")
 
@@ -40,6 +39,7 @@ class ChainDataset(wds.DataPipeline):
     Args:
         datasets (iterable of IterableDataset): datasets to be chained together
     """
+
     def __init__(self, datasets: List[wds.DataPipeline]) -> None:
         super().__init__()
         self.datasets = datasets
@@ -54,12 +54,16 @@ class ChainDataset(wds.DataPipeline):
                 self.prob.append(dataset.sample_ratio)
             else:
                 self.prob.append(1)
-                logging.info("One of the datapipeline doesn't define ratio and set to 1 automatically.")
+                logging.info(
+                    "One of the datapipeline doesn't define ratio and set to 1 automatically."
+                )
 
     def __iter__(self):
         datastreams = [iter(dataset) for dataset in self.datasets]
         while True:
-            select_datastream = random.choices(datastreams, weights=self.prob, k=1)[0]
+            select_datastream = random.choices(datastreams,
+                                               weights=self.prob,
+                                               k=1)[0]
             yield next(select_datastream)
 
 
@@ -81,6 +85,7 @@ def apply_to_sample(f, sample):
 
 
 def move_to_cuda(sample):
+
     def _move_to_cuda(tensor):
         return tensor.cuda()
 
@@ -157,10 +162,8 @@ def concat_datasets(datasets):
             for dataset in datasets[split_name]:
                 if isinstance(dataset, wds.DataPipeline):
                     logging.info(
-                        "Dataset {} is IterableDataset, can't be concatenated.".format(
-                            dataset
-                        )
-                    )
+                        "Dataset {} is IterableDataset, can't be concatenated."
+                        .format(dataset))
                     iterable_datasets.append(dataset)
                 elif isinstance(dataset, IterableDataset):
                     raise NotImplementedError(
@@ -172,25 +175,21 @@ def concat_datasets(datasets):
             # if len(iterable_datasets) > 0:
             # concatenate map-style datasets and iterable-style datasets separately
             if len(iterable_datasets) > 1:
-                chained_datasets = (
-                    ChainDataset(iterable_datasets)
-                )
+                chained_datasets = (ChainDataset(iterable_datasets))
             elif len(iterable_datasets) == 1:
                 chained_datasets = iterable_datasets[0]
             else:
                 chained_datasets = None
 
-            concat_datasets = (
-                ConcatDataset(map_datasets) if len(map_datasets) > 0 else None
-            )
+            concat_datasets = (ConcatDataset(map_datasets)
+                               if len(map_datasets) > 0 else None)
 
             train_datasets = concat_datasets, chained_datasets
-            train_datasets = tuple([x for x in train_datasets if x is not None])
-            train_datasets = (
-                train_datasets[0] if len(train_datasets) == 1 else train_datasets
-            )
+            train_datasets = tuple(
+                [x for x in train_datasets if x is not None])
+            train_datasets = (train_datasets[0]
+                              if len(train_datasets) == 1 else train_datasets)
 
             datasets[split_name] = train_datasets
 
     return datasets
-

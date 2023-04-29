@@ -58,8 +58,10 @@ class BlipIntermediateOutput(ModelOutput):
     text_embeds_m: Optional[torch.FloatTensor] = None
 
     # intermediate outputs of multimodal encoder
-    encoder_output: Optional[BaseModelOutputWithPoolingAndCrossAttentions] = None
-    encoder_output_neg: Optional[BaseModelOutputWithPoolingAndCrossAttentions] = None
+    encoder_output: Optional[
+        BaseModelOutputWithPoolingAndCrossAttentions] = None
+    encoder_output_neg: Optional[
+        BaseModelOutputWithPoolingAndCrossAttentions] = None
 
     itm_logits: Optional[torch.FloatTensor] = None
     itm_labels: Optional[torch.LongTensor] = None

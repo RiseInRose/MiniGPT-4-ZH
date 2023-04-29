@@ -73,8 +73,7 @@ def init_distributed_mode(args):
     args.dist_backend = "nccl"
     print(
         "| distributed init (rank {}, world {}): {}".format(
-            args.rank, args.world_size, args.dist_url
-        ),
+            args.rank, args.world_size, args.dist_url),
         flush=True,
     )
     torch.distributed.init_process_group(
@@ -83,8 +82,7 @@ def init_distributed_mode(args):
         world_size=args.world_size,
         rank=args.rank,
         timeout=datetime.timedelta(
-            days=365
-        ),  # allow auto-downloading and de-compressing
+            days=365),  # allow auto-downloading and de-compressing
     )
     torch.distributed.barrier()
     setup_for_distributed(args.rank == 0)
@@ -105,6 +103,7 @@ def get_dist_info():
 
 
 def main_process(func):
+
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
         rank, _ = get_dist_info()

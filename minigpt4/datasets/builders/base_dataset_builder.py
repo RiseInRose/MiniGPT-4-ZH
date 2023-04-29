@@ -21,7 +21,6 @@ from minigpt4.common.registry import registry
 from minigpt4.processors.base_processor import BaseProcessor
 
 
-
 class BaseDatasetBuilder:
     train_dataset_cls, eval_dataset_cls = None, None
 
@@ -39,8 +38,14 @@ class BaseDatasetBuilder:
 
         self.data_type = self.config.data_type
 
-        self.vis_processors = {"train": BaseProcessor(), "eval": BaseProcessor()}
-        self.text_processors = {"train": BaseProcessor(), "eval": BaseProcessor()}
+        self.vis_processors = {
+            "train": BaseProcessor(),
+            "eval": BaseProcessor()
+        }
+        self.text_processors = {
+            "train": BaseProcessor(),
+            "eval": BaseProcessor()
+        }
 
     def build_datasets(self):
         # download, split, etc...
@@ -66,23 +71,24 @@ class BaseDatasetBuilder:
             vis_train_cfg = vis_proc_cfg.get("train")
             vis_eval_cfg = vis_proc_cfg.get("eval")
 
-            self.vis_processors["train"] = self._build_proc_from_cfg(vis_train_cfg)
-            self.vis_processors["eval"] = self._build_proc_from_cfg(vis_eval_cfg)
+            self.vis_processors["train"] = self._build_proc_from_cfg(
+                vis_train_cfg)
+            self.vis_processors["eval"] = self._build_proc_from_cfg(
+                vis_eval_cfg)
 
         if txt_proc_cfg is not None:
             txt_train_cfg = txt_proc_cfg.get("train")
             txt_eval_cfg = txt_proc_cfg.get("eval")
 
-            self.text_processors["train"] = self._build_proc_from_cfg(txt_train_cfg)
-            self.text_processors["eval"] = self._build_proc_from_cfg(txt_eval_cfg)
+            self.text_processors["train"] = self._build_proc_from_cfg(
+                txt_train_cfg)
+            self.text_processors["eval"] = self._build_proc_from_cfg(
+                txt_eval_cfg)
 
     @staticmethod
     def _build_proc_from_cfg(cfg):
-        return (
-            registry.get_processor_class(cfg.name).from_config(cfg)
-            if cfg is not None
-            else None
-        )
+        return (registry.get_processor_class(cfg.name).from_config(cfg)
+                if cfg is not None else None)
 
     @classmethod
     def default_config_path(cls, type="default"):
@@ -140,14 +146,14 @@ class BaseDatasetBuilder:
                     if os.path.isdir(storage_path):
                         # if only dirname is provided, suffix with basename of URL.
                         raise ValueError(
-                            "Expecting storage_path to be a file path, got directory {}".format(
-                                storage_path
-                            )
-                        )
+                            "Expecting storage_path to be a file path, got directory {}"
+                            .format(storage_path))
                     else:
                         filename = os.path.basename(storage_path)
 
-                    download_url(url=url_or_filename, root=dirname, filename=filename)
+                    download_url(url=url_or_filename,
+                                 root=dirname,
+                                 filename=filename)
 
     def _download_vis(self):
 
@@ -155,13 +161,11 @@ class BaseDatasetBuilder:
         storage_path = utils.get_cache_path(storage_path)
 
         if not os.path.exists(storage_path):
-            warnings.warn(
-                f"""
+            warnings.warn(f"""
                 The specified path {storage_path} for visual inputs does not exist.
                 Please provide a correct path to the visual inputs or
                 refer to datasets/download_scripts/README.md for downloading instructions.
-                """
-            )
+                """)
 
     def build(self):
         """
@@ -184,16 +188,10 @@ class BaseDatasetBuilder:
             is_train = split == "train"
 
             # processors
-            vis_processor = (
-                self.vis_processors["train"]
-                if is_train
-                else self.vis_processors["eval"]
-            )
-            text_processor = (
-                self.text_processors["train"]
-                if is_train
-                else self.text_processors["eval"]
-            )
+            vis_processor = (self.vis_processors["train"]
+                             if is_train else self.vis_processors["eval"])
+            text_processor = (self.text_processors["train"]
+                              if is_train else self.text_processors["eval"])
 
             # annotation path
             ann_paths = ann_info.get(split).storage
@@ -215,7 +213,8 @@ class BaseDatasetBuilder:
                 vis_path = utils.get_cache_path(vis_path)
 
             if not os.path.exists(vis_path):
-                warnings.warn("storage path {} does not exist.".format(vis_path))
+                warnings.warn(
+                    "storage path {} does not exist.".format(vis_path))
 
             # create datasets
             dataset_cls = self.train_dataset_cls if is_train else self.eval_dataset_cls

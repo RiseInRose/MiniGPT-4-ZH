@@ -1,1 +1,4 @@
+offload/
+.direnv/python-*
+__pycache__/
 model/

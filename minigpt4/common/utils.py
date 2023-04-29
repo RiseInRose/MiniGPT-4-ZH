@@ -44,7 +44,8 @@ def is_url(url_or_filename):
 
 
 def get_cache_path(rel_path):
-    return os.path.expanduser(os.path.join(registry.get_path("cache_root"), rel_path))
+    return os.path.expanduser(
+        os.path.join(registry.get_path("cache_root"), rel_path))
 
 
 def get_abs_path(rel_path):
@@ -105,7 +106,8 @@ def to_google_drive_download_url(view_url: str) -> str:
     return f"https://drive.google.com/uc?export=download&id={file_id}"
 
 
-def download_google_drive_url(url: str, output_path: str, output_file_name: str):
+def download_google_drive_url(url: str, output_path: str,
+                              output_file_name: str):
     """
     Download a file from google drive
     Downloading an URL from google drive requires confirmation when
@@ -132,8 +134,7 @@ def download_google_drive_url(url: str, output_path: str, output_file_name: str)
 
                 with tqdm(total=total_size) as progress_bar:
                     for block in response.iter_content(
-                        chunk_size=io.DEFAULT_BUFFER_SIZE
-                    ):
+                            chunk_size=io.DEFAULT_BUFFER_SIZE):
                         file.write(block)
                         progress_bar.update(len(block))
 
@@ -154,8 +155,8 @@ def _get_google_drive_file_id(url: str) -> Optional[str]:
 def _urlretrieve(url: str, filename: str, chunk_size: int = 1024) -> None:
     with open(filename, "wb") as fh:
         with urllib.request.urlopen(
-            urllib.request.Request(url, headers={"User-Agent": "vissl"})
-        ) as response:
+                urllib.request.Request(url, headers={"User-Agent":
+                                                     "vissl"})) as response:
             with tqdm(total=response.length) as pbar:
                 for chunk in iter(lambda: response.read(chunk_size), ""):
                     if not chunk:
@@ -205,10 +206,8 @@ def download_url(
     except (urllib.error.URLError, IOError) as e:  # type: ignore[attr-defined]
         if url[:5] == "https":
             url = url.replace("https:", "http:")
-            print(
-                "Failed download. Trying https -> http instead."
-                " Downloading " + url + " to " + fpath
-            )
+            print("Failed download. Trying https -> http instead."
+                  " Downloading " + url + " to " + fpath)
             _urlretrieve(url, fpath)
         else:
             raise e
@@ -245,7 +244,8 @@ def cache_url(url: str, cache_dir: str) -> str:
     The resource will only be downloaded if not previously requested.
     """
     parsed_url = urlparse(url)
-    dirname = os.path.join(cache_dir, os.path.dirname(parsed_url.path.lstrip("/")))
+    dirname = os.path.join(cache_dir,
+                           os.path.dirname(parsed_url.path.lstrip("/")))
     makedir(dirname)
     filename = url.split("/")[-1]
     cached = os.path.join(dirname, filename)
@@ -351,12 +351,17 @@ def load_file(filename, mmap_mode=None, verbose=True, allow_pickle=False):
                 )
                 logging.info("Successfully loaded without g_pathmgr")
             except Exception:
-                logging.info("Could not mmap without g_pathmgr. Trying without mmap")
+                logging.info(
+                    "Could not mmap without g_pathmgr. Trying without mmap")
                 with g_pathmgr.open(filename, "rb") as fopen:
-                    data = np.load(fopen, allow_pickle=allow_pickle, encoding="latin1")
+                    data = np.load(fopen,
+                                   allow_pickle=allow_pickle,
+                                   encoding="latin1")
         else:
             with g_pathmgr.open(filename, "rb") as fopen:
-                data = np.load(fopen, allow_pickle=allow_pickle, encoding="latin1")
+                data = np.load(fopen,
+                               allow_pickle=allow_pickle,
+                               encoding="latin1")
     elif file_ext == ".json":
         with g_pathmgr.open(filename, "r") as fopen:
             data = json.load(fopen)

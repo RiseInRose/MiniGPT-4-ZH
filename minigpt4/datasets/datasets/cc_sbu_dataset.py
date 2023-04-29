@@ -6,8 +6,10 @@ from minigpt4.datasets.datasets.caption_datasets import CaptionDataset
 
 
 class CCSBUDataset(BaseDataset):
+
     def __init__(self, vis_processor, text_processor, location):
-        super().__init__(vis_processor=vis_processor, text_processor=text_processor)
+        super().__init__(vis_processor=vis_processor,
+                         text_processor=text_processor)
 
         self.inner_dataset = wds.DataPipeline(
             wds.ResampledShards(location),

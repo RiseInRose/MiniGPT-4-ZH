@@ -15,7 +15,6 @@ from minigpt4.models.blip2 import Blip2Base
 from minigpt4.models.mini_gpt4 import MiniGPT4
 from minigpt4.processors.base_processor import BaseProcessor
 
-
 __all__ = [
     "load_model",
     "BaseModel",
@@ -44,7 +43,8 @@ def load_model(name, model_type, is_eval=False, device="cpu", checkpoint=None):
         model (torch.nn.Module): model.
     """
 
-    model = registry.get_model_class(name).from_pretrained(model_type=model_type)
+    model = registry.get_model_class(name).from_pretrained(
+        model_type=model_type)
 
     if checkpoint is not None:
         model.load_checkpoint(checkpoint)
@@ -75,11 +75,8 @@ def load_preprocess(config):
     """
 
     def _build_proc_from_cfg(cfg):
-        return (
-            registry.get_processor_class(cfg.name).from_config(cfg)
-            if cfg is not None
-            else BaseProcessor()
-        )
+        return (registry.get_processor_class(cfg.name).from_config(cfg)
+                if cfg is not None else BaseProcessor())
 
     vis_processors = dict()
     txt_processors = dict()
@@ -145,12 +142,10 @@ def load_model_and_preprocess(name, model_type, is_eval=False, device="cpu"):
         vis_processors, txt_processors = load_preprocess(preprocess_cfg)
     else:
         vis_processors, txt_processors = None, None
-        logging.info(
-            f"""No default preprocess for model {name} ({model_type}).
+        logging.info(f"""No default preprocess for model {name} ({model_type}).
                 This can happen if the model is not finetuned on downstream datasets,
                 or it is not intended for direct use without finetuning.
-            """
-        )
+            """)
 
     if device == "cpu" or device == torch.device("cpu"):
         model = model.float()
@@ -176,19 +171,11 @@ class ModelZoo:
         }
 
     def __str__(self) -> str:
-        return (
-            "=" * 50
-            + "\n"
-            + f"{'Architectures':<30} {'Types'}\n"
-            + "=" * 50
-            + "\n"
-            + "\n".join(
-                [
+        return ("=" * 50 + "\n" + f"{'Architectures':<30} {'Types'}\n" +
+                "=" * 50 + "\n" + "\n".join([
                     f"{name:<30} {', '.join(types)}"
                     for name, types in self.model_zoo.items()
-                ]
-            )
-        )
+                ]))
 
     def __iter__(self):
         return iter(self.model_zoo.items())

@@ -88,8 +88,7 @@ class RunnerBase:
             if self.use_distributed:
                 if self._wrapped_model is None:
                     self._wrapped_model = DDP(
-                        self._model, device_ids=[self.config.run_cfg.gpu]
-                    )
+                        self._model, device_ids=[self.config.run_cfg.gpu])
             else:
                 self._wrapped_model = self._model
 
@@ -116,7 +115,10 @@ class RunnerBase:
                     "params": p_wd,
                     "weight_decay": float(self.config.run_cfg.weight_decay),
                 },
-                {"params": p_non_wd, "weight_decay": 0},
+                {
+                    "params": p_non_wd,
+                    "weight_decay": 0
+                },
             ]
             beta2 = self.config.run_cfg.get("beta2", 0.999)
             self._optimizer = torch.optim.AdamW(
@@ -144,7 +146,8 @@ class RunnerBase:
         A property to get and create learning rate scheduler by split just in need.
         """
         if self._lr_sched is None:
-            lr_sched_cls = registry.get_lr_scheduler_class(self.config.run_cfg.lr_sched)
+            lr_sched_cls = registry.get_lr_scheduler_class(
+                self.config.run_cfg.lr_sched)
 
             # max_epoch = self.config.run_cfg.max_epoch
             max_epoch = self.max_epoch
@@ -213,17 +216,13 @@ class RunnerBase:
             # print dataset statistics after concatenation/chaining
             for split_name in self.datasets:
                 if isinstance(self.datasets[split_name], tuple) or isinstance(
-                    self.datasets[split_name], list
-                ):
+                        self.datasets[split_name], list):
                     # mixed wds.DataPipeline and torch.utils.data.Dataset
-                    num_records = sum(
-                        [
-                            len(d)
-                            if not type(d) in [wds.DataPipeline, ChainDataset]
-                            else 0
-                            for d in self.datasets[split_name]
-                        ]
-                    )
+                    num_records = sum([
+                        len(d) if
+                        not type(d) in [wds.DataPipeline, ChainDataset] else 0
+                        for d in self.datasets[split_name]
+                    ])
 
                 else:
                     if hasattr(self.datasets[split_name], "__len__"):
@@ -238,10 +237,8 @@ class RunnerBase:
 
                 if num_records >= 0:
                     logging.info(
-                        "Loaded {} records for {} split from the dataset.".format(
-                            num_records, split_name
-                        )
-                    )
+                        "Loaded {} records for {} split from the dataset.".
+                        format(num_records, split_name))
 
             # create dataloaders
             split_names = sorted(self.datasets.keys())
@@ -251,15 +248,15 @@ class RunnerBase:
 
             batch_sizes = [
                 self.config.run_cfg.batch_size_train
-                if split == "train"
-                else self.config.run_cfg.batch_size_eval
+                if split == "train" else self.config.run_cfg.batch_size_eval
                 for split in split_names
             ]
 
             collate_fns = []
             for dataset in datasets:
                 if isinstance(dataset, tuple) or isinstance(dataset, list):
-                    collate_fns.append([getattr(d, "collater", None) for d in dataset])
+                    collate_fns.append(
+                        [getattr(d, "collater", None) for d in dataset])
                 else:
                     collate_fns.append(getattr(dataset, "collater", None))
 
@@ -271,7 +268,10 @@ class RunnerBase:
                 collate_fns=collate_fns,
             )
 
-            self._dataloaders = {k: v for k, v in zip(split_names, dataloaders)}
+            self._dataloaders = {
+                k: v
+                for k, v in zip(split_names, dataloaders)
+            }
 
         return self._dataloaders
 
@@ -383,9 +383,8 @@ class RunnerBase:
                 for split_name in self.valid_splits:
                     logging.info("Evaluating on {}.".format(split_name))
 
-                    val_log = self.eval_epoch(
-                        split_name=split_name, cur_epoch=cur_epoch
-                    )
+                    val_log = self.eval_epoch(split_name=split_name,
+                                              cur_epoch=cur_epoch)
                     if val_log is not None:
                         if is_main_process():
                             assert (
@@ -426,8 +425,9 @@ class RunnerBase:
         if len(self.test_splits) > 0:
             for split_name in self.test_splits:
                 test_logs[split_name] = self.eval_epoch(
-                    split_name=split_name, cur_epoch=cur_epoch, skip_reload=skip_reload
-                )
+                    split_name=split_name,
+                    cur_epoch=cur_epoch,
+                    skip_reload=skip_reload)
 
             return test_logs
 
@@ -460,7 +460,8 @@ class RunnerBase:
                 During testing, we will use provided weights and skip reloading the best checkpoint .
         """
         data_loader = self.dataloaders.get(split_name, None)
-        assert data_loader, "data_loader for split {} is None.".format(split_name)
+        assert data_loader, "data_loader for split {} is None.".format(
+            split_name)
 
         # TODO In validation, you need to compute loss as well as metrics
         # TODO consider moving to model.before_evaluation()
@@ -504,8 +505,7 @@ class RunnerBase:
         def _create_loader(dataset, num_workers, bsz, is_train, collate_fn):
             # create a single dataloader for each split
             if isinstance(dataset, ChainDataset) or isinstance(
-                dataset, wds.DataPipeline
-            ):
+                    dataset, wds.DataPipeline):
                 # wds.WebdDataset instance are chained together
                 # webdataset.DataPipeline has its own sampler and collate_fn
                 loader = iter(
@@ -514,8 +514,7 @@ class RunnerBase:
                         batch_size=bsz,
                         num_workers=num_workers,
                         pin_memory=True,
-                    )
-                )
+                    ))
             else:
                 # map-style dataset are concatenated together
                 # setup distributed sampler
@@ -545,27 +544,30 @@ class RunnerBase:
                 loader = PrefetchLoader(loader)
 
                 if is_train:
-                    loader = IterLoader(loader, use_distributed=self.use_distributed)
+                    loader = IterLoader(loader,
+                                        use_distributed=self.use_distributed)
 
             return loader
 
         loaders = []
 
-        for dataset, bsz, is_train, collate_fn in zip(
-            datasets, batch_sizes, is_trains, collate_fns
-        ):
+        for dataset, bsz, is_train, collate_fn in zip(datasets, batch_sizes,
+                                                      is_trains, collate_fns):
             if isinstance(dataset, list) or isinstance(dataset, tuple):
-                if hasattr(dataset[0], 'sample_ratio') and dataset_ratios is None:
+                if hasattr(dataset[0],
+                           'sample_ratio') and dataset_ratios is None:
                     dataset_ratios = [d.sample_ratio for d in dataset]
                 loader = MultiIterLoader(
                     loaders=[
-                        _create_loader(d, num_workers, bsz, is_train, collate_fn[i])
+                        _create_loader(d, num_workers, bsz, is_train,
+                                       collate_fn[i])
                         for i, d in enumerate(dataset)
                     ],
                     ratios=dataset_ratios,
                 )
             else:
-                loader = _create_loader(dataset, num_workers, bsz, is_train, collate_fn)
+                loader = _create_loader(dataset, num_workers, bsz, is_train,
+                                        collate_fn)
 
             loaders.append(loader)
 
@@ -578,7 +580,8 @@ class RunnerBase:
         """
         model_no_ddp = self.unwrap_dist_model(self.model)
         param_grad_dic = {
-            k: v.requires_grad for (k, v) in model_no_ddp.named_parameters()
+            k: v.requires_grad
+            for (k, v) in model_no_ddp.named_parameters()
         }
         state_dict = model_no_ddp.state_dict()
         for k in list(state_dict.keys()):
@@ -596,7 +599,8 @@ class RunnerBase:
             self.output_dir,
             "checkpoint_{}.pth".format("best" if is_best else cur_epoch),
         )
-        logging.info("Saving checkpoint at epoch {} to {}.".format(cur_epoch, save_to))
+        logging.info("Saving checkpoint at epoch {} to {}.".format(
+            cur_epoch, save_to))
         torch.save(save_obj, save_to)
 
     def _reload_best_model(self, model):
@@ -610,12 +614,10 @@ class RunnerBase:
         try:
             model.load_state_dict(checkpoint["model"])
         except RuntimeError as e:
-            logging.warning(
-                """
+            logging.warning("""
                 Key mismatch when loading checkpoint. This is expected if only part of the model is saved.
                 Trying to load the model with strict=False.
-                """
-            )
+                """)
             model.load_state_dict(checkpoint["model"], strict=False)
         return model
 
@@ -624,12 +626,16 @@ class RunnerBase:
         Resume from a checkpoint.
         """
         if is_url(url_or_filename):
-            cached_file = download_cached_file(
-                url_or_filename, check_hash=False, progress=True
-            )
-            checkpoint = torch.load(cached_file, map_location=self.device, strict=False)
+            cached_file = download_cached_file(url_or_filename,
+                                               check_hash=False,
+                                               progress=True)
+            checkpoint = torch.load(cached_file,
+                                    map_location=self.device,
+                                    strict=False)
         elif os.path.isfile(url_or_filename):
-            checkpoint = torch.load(url_or_filename, map_location=self.device, strict=False)
+            checkpoint = torch.load(url_or_filename,
+                                    map_location=self.device,
+                                    strict=False)
         else:
             raise RuntimeError("checkpoint url or path is invalid")
 

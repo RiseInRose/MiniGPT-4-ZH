@@ -25,8 +25,8 @@ class MultiIterLoader:
         # assert all loaders has __next__ method
         for loader in loaders:
             assert hasattr(
-                loader, "__next__"
-            ), "Loader {} has no __next__ method.".format(loader)
+                loader,
+                "__next__"), "Loader {} has no __next__ method.".format(loader)
 
         if ratios is None:
             ratios = [1.0] * len(loaders)
@@ -39,7 +39,8 @@ class MultiIterLoader:
 
     def __next__(self):
         # random sample from each loader by ratio
-        loader_idx = random.choices(range(len(self.loaders)), self.ratios, k=1)[0]
+        loader_idx = random.choices(range(len(self.loaders)), self.ratios,
+                                    k=1)[0]
         return next(self.loaders[loader_idx])
 
 
@@ -147,7 +148,8 @@ class IterLoader:
             data = next(self.iter_loader)
         except StopIteration:
             self._epoch += 1
-            if hasattr(self._dataloader.sampler, "set_epoch") and self._use_distributed:
+            if hasattr(self._dataloader.sampler,
+                       "set_epoch") and self._use_distributed:
                 self._dataloader.sampler.set_epoch(self._epoch)
             time.sleep(2)  # Prevent possible deadlock during epoch transition
             self.iter_loader = iter(self._dataloader)

@@ -12,17 +12,16 @@ from minigpt4.common.registry import registry
 
 @registry.register_lr_scheduler("linear_warmup_step_lr")
 class LinearWarmupStepLRScheduler:
-    def __init__(
-        self,
-        optimizer,
-        max_epoch,
-        min_lr,
-        init_lr,
-        decay_rate=1,
-        warmup_start_lr=-1,
-        warmup_steps=0,
-        **kwargs
-    ):
+
+    def __init__(self,
+                 optimizer,
+                 max_epoch,
+                 min_lr,
+                 init_lr,
+                 decay_rate=1,
+                 warmup_start_lr=-1,
+                 warmup_steps=0,
+                 **kwargs):
         self.optimizer = optimizer
 
         self.max_epoch = max_epoch
@@ -55,17 +54,16 @@ class LinearWarmupStepLRScheduler:
 
 @registry.register_lr_scheduler("linear_warmup_cosine_lr")
 class LinearWarmupCosineLRScheduler:
-    def __init__(
-        self,
-        optimizer,
-        max_epoch,
-        iters_per_epoch,
-        min_lr,
-        init_lr,
-        warmup_steps=0,
-        warmup_start_lr=-1,
-        **kwargs
-    ):
+
+    def __init__(self,
+                 optimizer,
+                 max_epoch,
+                 iters_per_epoch,
+                 min_lr,
+                 init_lr,
+                 warmup_steps=0,
+                 warmup_start_lr=-1,
+                 **kwargs):
         self.optimizer = optimizer
 
         self.max_epoch = max_epoch
@@ -99,8 +97,7 @@ class LinearWarmupCosineLRScheduler:
 def cosine_lr_schedule(optimizer, epoch, max_epoch, init_lr, min_lr):
     """Decay the learning rate"""
     lr = (init_lr - min_lr) * 0.5 * (
-        1.0 + math.cos(math.pi * epoch / max_epoch)
-    ) + min_lr
+        1.0 + math.cos(math.pi * epoch / max_epoch)) + min_lr
     for param_group in optimizer.param_groups:
         param_group["lr"] = lr
 

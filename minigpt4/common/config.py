@@ -14,6 +14,7 @@ from minigpt4.common.registry import registry
 
 
 class Config:
+
     def __init__(self, args):
         self.config = {}
 
@@ -36,9 +37,8 @@ class Config:
         # self._validate_runner_config(runner_config)
 
         # Override the default configuration with user options.
-        self.config = OmegaConf.merge(
-            runner_config, model_config, dataset_config, user_config
-        )
+        self.config = OmegaConf.merge(runner_config, model_config,
+                                      dataset_config, user_config)
 
     def _validate_runner_config(self, runner_config):
         """
@@ -68,7 +68,8 @@ class Config:
 
         assert model_type is not None, "Missing model_type."
 
-        model_config_path = model_cls.default_config_path(model_type=model_type)
+        model_config_path = model_cls.default_config_path(
+            model_type=model_type)
 
         model_config = OmegaConf.create()
         # hierarchy override, customized config > default config
@@ -99,14 +100,15 @@ class Config:
 
             dataset_config_type = datasets[dataset_name].get("type", "default")
             dataset_config_path = builder_cls.default_config_path(
-                type=dataset_config_type
-            )
+                type=dataset_config_type)
 
             # hierarchy override, customized config > default config
             dataset_config = OmegaConf.merge(
                 dataset_config,
                 OmegaConf.load(dataset_config_path),
-                {"datasets": {dataset_name: config["datasets"][dataset_name]}},
+                {"datasets": {
+                    dataset_name: config["datasets"][dataset_name]
+                }},
             )
 
         return dataset_config
@@ -123,7 +125,8 @@ class Config:
         if has_equal:
             return opts
 
-        return [(opt + "=" + value) for opt, value in zip(opts[0::2], opts[1::2])]
+        return [(opt + "=" + value)
+                for opt, value in zip(opts[0::2], opts[1::2])]
 
     def get_config(self):
         return self.config
@@ -153,7 +156,8 @@ class Config:
                 dataset_config = self.config.datasets[dataset]
                 logging.info(self._convert_node_to_json(dataset_config))
             else:
-                logging.warning(f"No dataset named '{dataset}' in config. Skipping")
+                logging.warning(
+                    f"No dataset named '{dataset}' in config. Skipping")
 
         logging.info(f"\n======  Model Attributes  ======")
         logging.info(self._convert_node_to_json(self.config.model))
@@ -185,6 +189,7 @@ class ConfigValidator:
     """
 
     class _Argument:
+
         def __init__(self, name, choices=None, type=None, help=None):
             self.name = name
             self.val = None
@@ -236,7 +241,8 @@ class ConfigValidator:
                 try:
                     self.arguments[k].val = self.arguments[k].type(v)
                 except ValueError:
-                    raise ValueError(f"{k} is not a valid {self.arguments[k].type}.")
+                    raise ValueError(
+                        f"{k} is not a valid {self.arguments[k].type}.")
 
             if self.arguments[k].choices is not None:
                 assert (
@@ -265,14 +271,16 @@ def create_runner_config_validator():
         "runner",
         type=str,
         choices=["runner_base", "runner_iter"],
-        help="""Runner to use. The "runner_base" uses epoch-based training while iter-based
+        help=
+        """Runner to use. The "runner_base" uses epoch-based training while iter-based
             runner runs based on iters. Default: runner_base""",
     )
     # add argumetns for training dataset ratios
     validator.add_argument(
         "train_dataset_ratios",
         type=Dict[str, float],
-        help="""Ratios of training dataset. This is used in iteration-based runner.
+        help=
+        """Ratios of training dataset. This is used in iteration-based runner.
         Do not support for epoch-based runner because how to define an epoch becomes tricky.
         Default: None""",
     )
@@ -290,14 +298,16 @@ def create_runner_config_validator():
     validator.add_argument(
         "iters_per_inner_epoch",
         type=float,
-        help="Number of iterations per inner epoch. This is required when runner is runner_iter.",
+        help=
+        "Number of iterations per inner epoch. This is required when runner is runner_iter.",
     )
     lr_scheds_choices = registry.list_lr_schedulers()
     validator.add_argument(
         "lr_sched",
         type=str,
         choices=lr_scheds_choices,
-        help="Learning rate scheduler to use, from {}".format(lr_scheds_choices),
+        help="Learning rate scheduler to use, from {}".format(
+            lr_scheds_choices),
     )
     task_choices = registry.list_tasks()
     validator.add_argument(
@@ -310,7 +320,8 @@ def create_runner_config_validator():
     validator.add_argument(
         "init_lr",
         type=float,
-        help="Initial learning rate. This will be the learning rate after warmup and before decay.",
+        help=
+        "Initial learning rate. This will be the learning rate after warmup and before decay.",
     )
     # add arguments for min_lr
     validator.add_argument(
@@ -328,7 +339,8 @@ def create_runner_config_validator():
     validator.add_argument(
         "lr_decay_rate",
         type=float,
-        help="Learning rate decay rate. Required if using a decaying learning rate scheduler.",
+        help=
+        "Learning rate decay rate. Required if using a decaying learning rate scheduler.",
     )
     # add arguments for weight decay
     validator.add_argument(
@@ -374,7 +386,8 @@ def create_runner_config_validator():
     # add arguments for whether only use evaluation
     validator.add_argument(
         "evaluate",
-        help="Whether to only evaluate the model. If true, training will not be performed.",
+        help=
+        "Whether to only evaluate the model. If true, training will not be performed.",
     )
     # add arguments for splits used for training, e.g. ["train", "val"]
     validator.add_argument(
@@ -386,13 +399,15 @@ def create_runner_config_validator():
     validator.add_argument(
         "valid_splits",
         type=list,
-        help="Splits to use for validation. If not provided, will skip the validation.",
+        help=
+        "Splits to use for validation. If not provided, will skip the validation.",
     )
     # add arguments for splits used for testing, e.g. ["test"]
     validator.add_argument(
         "test_splits",
         type=list,
-        help="Splits to use for testing. If not provided, will skip the testing.",
+        help=
+        "Splits to use for testing. If not provided, will skip the testing.",
     )
     # add arguments for accumulating gradient for iterations
     validator.add_argument(
@@ -448,21 +463,24 @@ def create_runner_config_validator():
     validator.add_argument(
         "num_ans_candidates",
         type=int,
-        help="""For ALBEF and BLIP, these models first rank answers according to likelihood to select answer candidates.""",
+        help=
+        """For ALBEF and BLIP, these models first rank answers according to likelihood to select answer candidates.""",
     )
     # add arguments for inference method
     validator.add_argument(
         "inference_method",
         type=str,
         choices=["genearte", "rank"],
-        help="""Inference method to use for question answering. If rank, requires a answer list.""",
+        help=
+        """Inference method to use for question answering. If rank, requires a answer list.""",
     )
 
     # ====== model specific ======
     validator.add_argument(
         "k_test",
         type=int,
-        help="Number of top k most similar samples from ITC/VTC selection to be tested.",
+        help=
+        "Number of top k most similar samples from ITC/VTC selection to be tested.",
     )
 
     return validator

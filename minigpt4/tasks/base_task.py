@@ -17,6 +17,7 @@ from minigpt4.datasets.data_utils import prepare_sample
 
 
 class BaseTask:
+
     def __init__(self, **kwargs):
         super().__init__()
 
@@ -48,7 +49,8 @@ class BaseTask:
 
         datasets_config = cfg.datasets_cfg
 
-        assert len(datasets_config) > 0, "At least one dataset has to be specified."
+        assert len(
+            datasets_config) > 0, "At least one dataset has to be specified."
 
         for name in datasets_config:
             dataset_config = datasets_config[name]
@@ -88,7 +90,8 @@ class BaseTask:
 
         results = []
 
-        for samples in metric_logger.log_every(data_loader, print_freq, header):
+        for samples in metric_logger.log_every(data_loader, print_freq,
+                                               header):
             samples = prepare_sample(samples, cuda_enabled=cuda_enabled)
 
             eval_output = self.valid_step(model=model, samples=samples)
@@ -179,15 +182,15 @@ class BaseTask:
             data_loader = iter(data_loader)
 
         metric_logger = MetricLogger(delimiter="  ")
-        metric_logger.add_meter("lr", SmoothedValue(window_size=1, fmt="{value:.6f}"))
-        metric_logger.add_meter("loss", SmoothedValue(window_size=1, fmt="{value:.4f}"))
+        metric_logger.add_meter(
+            "lr", SmoothedValue(window_size=1, fmt="{value:.6f}"))
+        metric_logger.add_meter(
+            "loss", SmoothedValue(window_size=1, fmt="{value:.4f}"))
 
         # if iter-based runner, schedule lr based on inner epoch.
         logging.info(
             "Start training epoch {}, {} iters per inner epoch.".format(
-                epoch, iters_per_epoch
-            )
-        )
+                epoch, iters_per_epoch))
         header = "Train: data epoch: [{}]".format(epoch)
         if start_iters is None:
             # epoch-based runner
@@ -197,7 +200,8 @@ class BaseTask:
             inner_epoch = start_iters // iters_per_epoch
             header = header + "; inner epoch [{}]".format(inner_epoch)
 
-        for i in metric_logger.log_every(range(iters_per_epoch), log_freq, header):
+        for i in metric_logger.log_every(range(iters_per_epoch), log_freq,
+                                         header):
             # if using iter-based runner, we stop after iters_per_epoch iterations.
             if i >= iters_per_epoch:
                 break
@@ -205,13 +209,11 @@ class BaseTask:
             samples = next(data_loader)
 
             samples = prepare_sample(samples, cuda_enabled=cuda_enabled)
-            samples.update(
-                {
-                    "epoch": inner_epoch,
-                    "num_iters_per_epoch": iters_per_epoch,
-                    "iters": i,
-                }
-            )
+            samples.update({
+                "epoch": inner_epoch,
+                "num_iters_per_epoch": iters_per_epoch,
+                "iters": i,
+            })
 
             lr_scheduler.step(cur_epoch=inner_epoch, cur_step=i)
 
@@ -228,8 +230,8 @@ class BaseTask:
             if (i + 1) % accum_grad_iters == 0:
                 if use_amp:
                     scaler.step(optimizer)
-                    scaler.update()                     
-                else:    
+                    scaler.update()
+                else:
                     optimizer.step()
                 optimizer.zero_grad()
 
@@ -249,9 +251,8 @@ class BaseTask:
     def save_result(result, result_dir, filename, remove_duplicate=""):
         import json
 
-        result_file = os.path.join(
-            result_dir, "%s_rank%d.json" % (filename, get_rank())
-        )
+        result_file = os.path.join(result_dir,
+                                   "%s_rank%d.json" % (filename, get_rank()))
         final_result_file = os.path.join(result_dir, "%s.json" % filename)
 
         json.dump(result, open(result_file, "w"))
@@ -265,9 +266,8 @@ class BaseTask:
             result = []
 
             for rank in range(get_world_size()):
-                result_file = os.path.join(
-                    result_dir, "%s_rank%d.json" % (filename, rank)
-                )
+                result_file = os.path.join(result_dir,
+                                           "%s_rank%d.json" % (filename, rank))
                 res = json.load(open(result_file, "r"))
                 result += res
 

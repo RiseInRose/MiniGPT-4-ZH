@@ -105,9 +105,9 @@ def color_func(img, factor):
     #      np.eye(3) * factor
     #      + np.float32([0.114, 0.587, 0.299]).reshape(3, 1) * (1. - factor)
     #  )[np.newaxis, np.newaxis, :]
-    M = np.float32(
-        [[0.886, -0.114, -0.114], [-0.587, 0.413, -0.587], [-0.299, -0.299, 0.701]]
-    ) * factor + np.float32([[0.114], [0.587], [0.299]])
+    M = np.float32([[0.886, -0.114, -0.114], [-0.587, 0.413, -0.587],
+                    [-0.299, -0.299, 0.701]]) * factor + np.float32(
+                        [[0.114], [0.587], [0.299]])
     out = np.matmul(img, M).clip(0, 255).astype(np.uint8)
     return out
 
@@ -117,11 +117,8 @@ def contrast_func(img, factor):
     same output as PIL.ImageEnhance.Contrast
     """
     mean = np.sum(np.mean(img, axis=(0, 1)) * np.array([0.114, 0.587, 0.299]))
-    table = (
-        np.array([(el - mean) * factor + mean for el in range(256)])
-        .clip(0, 255)
-        .astype(np.uint8)
-    )
+    table = (np.array([(el - mean) * factor + mean
+                       for el in range(256)]).clip(0, 255).astype(np.uint8))
     out = table[img]
     return out
 
@@ -130,7 +127,8 @@ def brightness_func(img, factor):
     """
     same output as PIL.ImageEnhance.Contrast
     """
-    table = (np.arange(256, dtype=np.float32) * factor).clip(0, 255).astype(np.uint8)
+    table = (np.arange(256, dtype=np.float32) * factor).clip(0, 255).astype(
+        np.uint8)
     out = table[img]
     return out
 
@@ -151,7 +149,8 @@ def sharpness_func(img, factor):
     else:
         out = img.astype(np.float32)
         degenerate = degenerate.astype(np.float32)[1:-1, 1:-1, :]
-        out[1:-1, 1:-1, :] = degenerate + factor * (out[1:-1, 1:-1, :] - degenerate)
+        out[1:-1,
+            1:-1, :] = degenerate + factor * (out[1:-1, 1:-1, :] - degenerate)
         out = out.astype(np.uint8)
     return out
 
@@ -159,9 +158,10 @@ def sharpness_func(img, factor):
 def shear_x_func(img, factor, fill=(0, 0, 0)):
     H, W = img.shape[0], img.shape[1]
     M = np.float32([[1, factor, 0], [0, 1, 0]])
-    out = cv2.warpAffine(
-        img, M, (W, H), borderValue=fill, flags=cv2.INTER_LINEAR
-    ).astype(np.uint8)
+    out = cv2.warpAffine(img,
+                         M, (W, H),
+                         borderValue=fill,
+                         flags=cv2.INTER_LINEAR).astype(np.uint8)
     return out
 
 
@@ -171,9 +171,10 @@ def translate_x_func(img, offset, fill=(0, 0, 0)):
     """
     H, W = img.shape[0], img.shape[1]
     M = np.float32([[1, 0, -offset], [0, 1, 0]])
-    out = cv2.warpAffine(
-        img, M, (W, H), borderValue=fill, flags=cv2.INTER_LINEAR
-    ).astype(np.uint8)
+    out = cv2.warpAffine(img,
+                         M, (W, H),
+                         borderValue=fill,
+                         flags=cv2.INTER_LINEAR).astype(np.uint8)
     return out
 
 
@@ -183,9 +184,10 @@ def translate_y_func(img, offset, fill=(0, 0, 0)):
     """
     H, W = img.shape[0], img.shape[1]
     M = np.float32([[1, 0, 0], [0, 1, -offset]])
-    out = cv2.warpAffine(
-        img, M, (W, H), borderValue=fill, flags=cv2.INTER_LINEAR
-    ).astype(np.uint8)
+    out = cv2.warpAffine(img,
+                         M, (W, H),
+                         borderValue=fill,
+                         flags=cv2.INTER_LINEAR).astype(np.uint8)
     return out
 
 
@@ -200,9 +202,10 @@ def posterize_func(img, bits):
 def shear_y_func(img, factor, fill=(0, 0, 0)):
     H, W = img.shape[0], img.shape[1]
     M = np.float32([[1, 0, 0], [factor, 1, 0]])
-    out = cv2.warpAffine(
-        img, M, (W, H), borderValue=fill, flags=cv2.INTER_LINEAR
-    ).astype(np.uint8)
+    out = cv2.warpAffine(img,
+                         M, (W, H),
+                         borderValue=fill,
+                         flags=cv2.INTER_LINEAR).astype(np.uint8)
     return out
 
 
@@ -221,13 +224,15 @@ def cutout_func(img, pad_size, replace=(0, 0, 0)):
 
 ### level to args
 def enhance_level_to_args(MAX_LEVEL):
+
     def level_to_args(level):
-        return ((level / MAX_LEVEL) * 1.8 + 0.1,)
+        return ((level / MAX_LEVEL) * 1.8 + 0.1, )
 
     return level_to_args
 
 
 def shear_level_to_args(MAX_LEVEL, replace_value):
+
     def level_to_args(level):
         level = (level / MAX_LEVEL) * 0.3
         if np.random.random() > 0.5:
@@ -238,6 +243,7 @@ def shear_level_to_args(MAX_LEVEL, replace_value):
 
 
 def translate_level_to_args(translate_const, MAX_LEVEL, replace_value):
+
     def level_to_args(level):
         level = (level / MAX_LEVEL) * float(translate_const)
         if np.random.random() > 0.5:
@@ -248,6 +254,7 @@ def translate_level_to_args(translate_const, MAX_LEVEL, replace_value):
 
 
 def cutout_level_to_args(cutout_const, MAX_LEVEL, replace_value):
+
     def level_to_args(level):
         level = int((level / MAX_LEVEL) * cutout_const)
         return (level, replace_value)
@@ -256,9 +263,10 @@ def cutout_level_to_args(cutout_const, MAX_LEVEL, replace_value):
 
 
 def solarize_level_to_args(MAX_LEVEL):
+
     def level_to_args(level):
         level = int((level / MAX_LEVEL) * 256)
-        return (level,)
+        return (level, )
 
     return level_to_args
 
@@ -268,14 +276,16 @@ def none_level_to_args(level):
 
 
 def posterize_level_to_args(MAX_LEVEL):
+
     def level_to_args(level):
         level = int((level / MAX_LEVEL) * 4)
-        return (level,)
+        return (level, )
 
     return level_to_args
 
 
 def rotate_level_to_args(MAX_LEVEL, replace_value):
+
     def level_to_args(level):
         level = (level / MAX_LEVEL) * 30
         if np.random.random() < 0.5:
@@ -306,24 +316,39 @@ translate_const = 10
 MAX_LEVEL = 10
 replace_value = (128, 128, 128)
 arg_dict = {
-    "Identity": none_level_to_args,
-    "AutoContrast": none_level_to_args,
-    "Equalize": none_level_to_args,
-    "Rotate": rotate_level_to_args(MAX_LEVEL, replace_value),
-    "Solarize": solarize_level_to_args(MAX_LEVEL),
-    "Color": enhance_level_to_args(MAX_LEVEL),
-    "Contrast": enhance_level_to_args(MAX_LEVEL),
-    "Brightness": enhance_level_to_args(MAX_LEVEL),
-    "Sharpness": enhance_level_to_args(MAX_LEVEL),
-    "ShearX": shear_level_to_args(MAX_LEVEL, replace_value),
-    "TranslateX": translate_level_to_args(translate_const, MAX_LEVEL, replace_value),
-    "TranslateY": translate_level_to_args(translate_const, MAX_LEVEL, replace_value),
-    "Posterize": posterize_level_to_args(MAX_LEVEL),
-    "ShearY": shear_level_to_args(MAX_LEVEL, replace_value),
+    "Identity":
+    none_level_to_args,
+    "AutoContrast":
+    none_level_to_args,
+    "Equalize":
+    none_level_to_args,
+    "Rotate":
+    rotate_level_to_args(MAX_LEVEL, replace_value),
+    "Solarize":
+    solarize_level_to_args(MAX_LEVEL),
+    "Color":
+    enhance_level_to_args(MAX_LEVEL),
+    "Contrast":
+    enhance_level_to_args(MAX_LEVEL),
+    "Brightness":
+    enhance_level_to_args(MAX_LEVEL),
+    "Sharpness":
+    enhance_level_to_args(MAX_LEVEL),
+    "ShearX":
+    shear_level_to_args(MAX_LEVEL, replace_value),
+    "TranslateX":
+    translate_level_to_args(translate_const, MAX_LEVEL, replace_value),
+    "TranslateY":
+    translate_level_to_args(translate_const, MAX_LEVEL, replace_value),
+    "Posterize":
+    posterize_level_to_args(MAX_LEVEL),
+    "ShearY":
+    shear_level_to_args(MAX_LEVEL, replace_value),
 }
 
 
 class RandomAugment(object):
+
     def __init__(self, N=2, M=10, isPIL=False, augs=[]):
         self.N = N
         self.M = M
@@ -350,6 +375,7 @@ class RandomAugment(object):
 
 
 class VideoRandomAugment(object):
+
     def __init__(self, N=2, M=10, p=0.0, tensor_in_tensor_out=True, augs=[]):
         self.N = N
         self.M = M
@@ -365,9 +391,8 @@ class VideoRandomAugment(object):
         return [(op, self.M) for op in sampled_ops]
 
     def __call__(self, frames):
-        assert (
-            frames.shape[-1] == 3
-        ), "Expecting last dimension for 3-channels RGB (b, h, w, c)."
+        assert (frames.shape[-1] == 3
+                ), "Expecting last dimension for 3-channels RGB (b, h, w, c)."
 
         if self.tensor_in_tensor_out:
             frames = frames.numpy().astype(np.uint8)
@@ -377,9 +402,8 @@ class VideoRandomAugment(object):
         ops = num_frames * [self.get_random_ops()]
         apply_or_not = num_frames * [np.random.random(size=self.N) > self.p]
 
-        frames = torch.stack(
-            list(map(self._aug, frames, ops, apply_or_not)), dim=0
-        ).float()
+        frames = torch.stack(list(map(self._aug, frames, ops, apply_or_not)),
+                             dim=0).float()
 
         return frames
 

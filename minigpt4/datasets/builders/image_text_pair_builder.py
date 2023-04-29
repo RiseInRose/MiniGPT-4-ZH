@@ -91,7 +91,8 @@ class CCSBUAlignBuilder(BaseDatasetBuilder):
         datasets = dict()
 
         if not os.path.exists(storage_path):
-            warnings.warn("storage path {} does not exist.".format(storage_path))
+            warnings.warn(
+                "storage path {} does not exist.".format(storage_path))
 
         # create datasets
         dataset_cls = self.train_dataset_cls

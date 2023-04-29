@@ -40,7 +40,9 @@ class SmoothedValue(object):
         """
         if not dist_utils.is_dist_avail_and_initialized():
             return
-        t = torch.tensor([self.count, self.total], dtype=torch.float64, device="cuda")
+        t = torch.tensor([self.count, self.total],
+                         dtype=torch.float64,
+                         device="cuda")
         dist.barrier()
         dist.all_reduce(t)
         t = t.tolist()
@@ -80,6 +82,7 @@ class SmoothedValue(object):
 
 
 class MetricLogger(object):
+
     def __init__(self, delimiter="\t"):
         self.meters = defaultdict(SmoothedValue)
         self.delimiter = delimiter
@@ -96,9 +99,8 @@ class MetricLogger(object):
             return self.meters[attr]
         if attr in self.__dict__:
             return self.__dict__[attr]
-        raise AttributeError(
-            "'{}' object has no attribute '{}'".format(type(self).__name__, attr)
-        )
+        raise AttributeError("'{}' object has no attribute '{}'".format(
+            type(self).__name__, attr))
 
     def __str__(self):
         loss_str = []
@@ -157,8 +159,7 @@ class MetricLogger(object):
                             time=str(iter_time),
                             data=str(data_time),
                             memory=torch.cuda.max_memory_allocated() / MB,
-                        )
-                    )
+                        ))
                 else:
                     print(
                         log_msg.format(
@@ -168,20 +169,17 @@ class MetricLogger(object):
                             meters=str(self),
                             time=str(iter_time),
                             data=str(data_time),
-                        )
-                    )
+                        ))
             i += 1
             end = time.time()
         total_time = time.time() - start_time
         total_time_str = str(datetime.timedelta(seconds=int(total_time)))
-        print(
-            "{} Total time: {} ({:.4f} s / it)".format(
-                header, total_time_str, total_time / len(iterable)
-            )
-        )
+        print("{} Total time: {} ({:.4f} s / it)".format(
+            header, total_time_str, total_time / len(iterable)))
 
 
 class AttrDict(dict):
+
     def __init__(self, *args, **kwargs):
         super(AttrDict, self).__init__(*args, **kwargs)
         self.__dict__ = self
