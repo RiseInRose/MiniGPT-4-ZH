@@ -190,7 +190,7 @@ model = LlamaForCausalLM.from_pretrained("/output/path")
 当这两个权重准备好后，我们可以使用Vicuna团队的工具来创建真正的工作权重。首先，安装与v0 Vicuna兼容的库：
 
 ```bash
-pip install git+https://github.com/huggingface/transformers@v0.1.10
+pip install git+https://github.com/lm-sys/FastChat.git@v0.1.10
 ```
 
 然后，运行以下命令以创建最终的工作权重：
