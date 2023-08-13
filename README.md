@@ -3,6 +3,7 @@ MiniGPT-4: 使用先进的大型语言模型增强视觉语言理解
 
 所属机构为沙特阿拉伯国王科技大学。
 
+[English README](README_ENGLISH.md)
 ## 在线演示
 
 点击图像与MiniGPT-4聊天，了解有关您的图像的信息。
